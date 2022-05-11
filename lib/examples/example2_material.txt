@@ -1,0 +1,12 @@
+En la página material.io pueden encontrar información útil sobre diseño gráfico.
+Todo lo que hay en esa página es el standard.
+Ante la duda, consulten. 
+De todos modos, yo me voy a meter a arreglar el diseño cuando se pongan locos
+y no obedezcan el material design.
+
+Algunas reglas básicas:
+- Todos los tamaños deben ser múltiplos de 8. 
+- Los mensajes de error son lindos, usen muchos.
+- El tamaño de la letra, la negrita y todo esto está estandarizado.
+- Los botones vienen en 3 tipos, abstenganse a usar TextButton y ElevatedButton
+- Nada de colores raros. El del automatico para todo, excepto rojo para borrar.

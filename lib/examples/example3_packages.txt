@@ -1,0 +1,20 @@
+En el archivo pubspec.yaml tienen, entre otras cosas, las dependencias.
+Para agregar una dependencia tienen que encontrar el nombre del paquete o librería en 
+la página web pub.dev
+
+Ejemplo interactivo.
+- Buscar en Google "http flutter"
+- Encontrar el link a pub.dev
+- Leer el README del paquete
+- Ir a la pestaña de Installing
+- Encontrar la sección que dice "dependencies: http: ^0.13.4"
+- Copiar la linea de "http: ^0.13.4"
+- Encontrar la parte del archivo pubspec.yaml donde iría esa línea (ya está agregada)
+- Tocar Ctrl + S.
+
+Deberían notar que se está corriendo 'flutter pub get'.
+Este comando se encarga de revisar que todas las dependencias estén descargadas 
+para nuestro proyecto, de eliminar cualquiera que borramos y otras cosas.
+
+La notación ^x.y.z significa "La versión más reciente aún compatible con la x.y.z",
+no necesariamente la última
