@@ -16,7 +16,7 @@ class Server {
   // TODO Cambiar por valor correcto
   static const String apiUrl = 'localhost:8000';
 
-  Future<void> signUp(String email, String password) async {
+  static Future<void> signUp(String email, String password) async {
     final body = {
       'email': email,
       'password': password,
