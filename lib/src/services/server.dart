@@ -14,5 +14,30 @@ class ServerException implements Exception {
 
 class Server {
   // TODO Cambiar por valor correcto
-  static const String api_url = '';
+  static const String apiUrl = 'localhost:8000';
+
+  Future<void> signUp(String email, String password) async {
+    final body = {
+      'email': email,
+      'password': password,
+    };
+
+    final response = await http.post(
+      Uri.https(apiUrl, '/auth'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return;
+      case HttpStatus.badRequest:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
 }

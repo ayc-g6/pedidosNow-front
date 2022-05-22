@@ -1,3 +1,4 @@
+import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -81,19 +82,14 @@ class _SignUpFormState extends State<SignUpForm> {
     FocusScope.of(context).unfocus();
     if (_signUpFormKey.currentState!.validate()) {
       _signUpFormKey.currentState!.save();
-
-      /*
-      if (!mounted) return;
-
-      if (result == null) {
-        await _login();
-        Navigator.pop(context);
-      } else {
-        final snackBar = SnackBar(content: Text(result));
+      try {
+        Server.signUp(_email!, _password!);
+      } on ServerException catch (e) {
+        if (!mounted) return;
+        final snackBar = SnackBar(content: Text(e.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }*/
+      }
     }
-
     setState(() {
       isLoading = false;
     });
