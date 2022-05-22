@@ -1,4 +1,4 @@
-import 'package:envios_ya/src/pages/signup.dart';
+import 'package:envios_ya/src/pages/sign_up_business.dart';
 import 'package:flutter/material.dart';
 
 class LogInBusinessPage extends StatelessWidget {
@@ -28,7 +28,8 @@ class LogInBusinessPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SignUpPage()),
+                                builder: (context) =>
+                                    const SignUpBusinessPage()),
                           );
                         },
                         child: const Text('Sign up'),

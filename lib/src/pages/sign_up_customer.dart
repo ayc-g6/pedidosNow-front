@@ -1,8 +1,8 @@
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+class SignUpCustomerPage extends StatelessWidget {
+  const SignUpCustomerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class SignUpPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(16.0),
-            child: SignUpForm(),
+            child: SignUpCustomerForm(),
           ),
         ),
       ),
@@ -19,14 +19,14 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({Key? key}) : super(key: key);
+class SignUpCustomerForm extends StatefulWidget {
+  const SignUpCustomerForm({Key? key}) : super(key: key);
 
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  State<SignUpCustomerForm> createState() => _SignUpCustomerFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
   bool _passwordObscured = true;
   bool _passwordConfirmationObscured = true;
   bool isLoading = false;
