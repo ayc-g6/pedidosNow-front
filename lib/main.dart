@@ -1,3 +1,4 @@
+import 'package:envios_ya/src/pages/signup.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -22,16 +23,16 @@ class EnviosYaApp extends StatelessWidget {
         create: (context) => Auth(),
         child: Consumer<Auth>(
           builder: (context, auth, child) {
-            bool isLoggedIn = auth.sessionToken != null;
-            Navigator.popUntil(context, (route) => route.isFirst);
-            if (!isLoggedIn) {
-              // Navigator.push(PAGINA LOGIN) 
-            } else {
-              //Navigator.popUntil(context, (route) => )
+            switch (auth.state) {
+              case AuthState.uninitialized:
+                return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
+              case AuthState.loggedIn:
+                return Scaffold(body: Center(child: Text('HOME')));
+              case AuthState.loggedOut:
+                return SignUpPage();
             }
-            return Scaffold(body: Center(child: Text('LOGO APP'),),);
-          }
-        )
+          },
+        ),
       ),
     );
   }
