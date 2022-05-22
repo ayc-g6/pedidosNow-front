@@ -31,19 +31,24 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
   bool _passwordConfirmationObscured = true;
   bool isLoading = false;
 
-  final _signUpFormKey = GlobalKey<FormState>();
+  final _signUpBusinessFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
 
-  String? _username;
+  String? _businessName;
+  String? _address;
   String? _email;
   String? _password;
 
-  String? _validateUsername(value) {
+  String? _validateBusinessName(value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a username';
+      return 'Please enter a valid business name';
     }
-    if (!RegExp(r"^[A-Za-z]+$").hasMatch(value.toLowerCase())) {
-      return 'Please use only alphabetical characters';
+    return null;
+  }
+
+  String? _validateAddress(value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a valid address';
     }
     return null;
   }
@@ -75,15 +80,15 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
     return null;
   }
 
-  void _signUp() async {
+  void _signUpBusiness() async {
     setState(() {
       isLoading = true;
     });
     FocusScope.of(context).unfocus();
-    if (_signUpFormKey.currentState!.validate()) {
-      _signUpFormKey.currentState!.save();
+    if (_signUpBusinessFormKey.currentState!.validate()) {
+      _signUpBusinessFormKey.currentState!.save();
       try {
-        Server.signUp(_email!, _password!);
+        //Server.signUp(_email!, _password!);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
@@ -98,16 +103,26 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _signUpFormKey,
+      key: _signUpBusinessFormKey,
       child: Column(
         children: [
           TextFormField(
             textInputAction: TextInputAction.next,
-            onSaved: (value) => _username = value,
-            validator: (value) => _validateUsername(value),
+            onSaved: (value) => _businessName = value,
+            validator: (value) => _validateBusinessName(value),
             decoration: const InputDecoration(
-              labelText: 'Username',
-              filled: true,
+              labelText: 'Business Name',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            onSaved: (value) => _address = value,
+            validator: (value) => _validateAddress(value),
+            decoration: const InputDecoration(
+              labelText: 'Address',
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16.0),
@@ -118,7 +133,7 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
             decoration: const InputDecoration(
               hintText: 'example@email.com',
               labelText: 'Email',
-              filled: true,
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16.0),
@@ -130,7 +145,7 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
             validator: (value) => _validatePassword(value),
             decoration: InputDecoration(
                 labelText: 'Password',
-                filled: true,
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -148,7 +163,7 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
             validator: (value) => _validatePasswordConfirmation(value),
             decoration: InputDecoration(
                 labelText: 'Password Confirmation',
-                filled: true,
+                border: OutlineInputBorder(),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -173,8 +188,8 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
               isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: () => _signUp(),
-                      child: const Text('Sign up'),
+                      onPressed: () => _signUpBusiness(),
+                      child: const Text('SIGN UP'),
                     ),
             ],
           ),
