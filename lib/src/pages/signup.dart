@@ -95,21 +95,6 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  /*
-  Future<void> _login() async {
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    String? result = await Server.login(
-        auth, _emailController.text, _passwordController.text);
-
-    if (!mounted) return;
-
-    if (result != null) {
-      final snackBar = SnackBar(content: Text(result));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return;
-    }
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Form(
