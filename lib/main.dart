@@ -1,4 +1,4 @@
-import 'package:envios_ya/src/pages/signup.dart';
+import 'package:envios_ya/src/pages/log_in.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.loggedIn:
                 return Scaffold(body: Center(child: Text('HOME')));
               case AuthState.loggedOut:
-                return SignUpPage();
+                return LogInPage();
             }
           },
         ),
