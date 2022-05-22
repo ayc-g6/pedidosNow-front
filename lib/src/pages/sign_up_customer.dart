@@ -31,7 +31,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
   bool _passwordConfirmationObscured = true;
   bool isLoading = false;
 
-  final _signUpFormKey = GlobalKey<FormState>();
+  final _signUpCustomerFormKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
 
   String? _username;
@@ -75,13 +75,13 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
     return null;
   }
 
-  void _signUp() async {
+  void _signUpCustomer() async {
     setState(() {
       isLoading = true;
     });
     FocusScope.of(context).unfocus();
-    if (_signUpFormKey.currentState!.validate()) {
-      _signUpFormKey.currentState!.save();
+    if (_signUpCustomerFormKey.currentState!.validate()) {
+      _signUpCustomerFormKey.currentState!.save();
       try {
         Server.signUp(_email!, _password!);
       } on ServerException catch (e) {
@@ -98,7 +98,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _signUpFormKey,
+      key: _signUpCustomerFormKey,
       child: Column(
         children: [
           TextFormField(
@@ -107,7 +107,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
             validator: (value) => _validateUsername(value),
             decoration: const InputDecoration(
               labelText: 'Username',
-              filled: true,
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16.0),
@@ -118,7 +118,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
             decoration: const InputDecoration(
               hintText: 'example@email.com',
               labelText: 'Email',
-              filled: true,
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16.0),
@@ -130,7 +130,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
             validator: (value) => _validatePassword(value),
             decoration: InputDecoration(
                 labelText: 'Password',
-                filled: true,
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -148,7 +148,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
             validator: (value) => _validatePasswordConfirmation(value),
             decoration: InputDecoration(
                 labelText: 'Password Confirmation',
-                filled: true,
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -173,7 +173,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
               isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: () => _signUp(),
+                      onPressed: () => _signUpCustomer(),
                       child: const Text('Sign up'),
                     ),
             ],
