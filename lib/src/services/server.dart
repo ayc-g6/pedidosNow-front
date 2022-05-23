@@ -14,23 +14,23 @@ class ServerException implements Exception {
 
 class Server {
   // TODO Cambiar por valor correcto
-  static const String apiUrl = 'localhost:8000';
+  static const String apiUrl = 'pedidosnow-back.herokuapp.com';
+  // static const String apiUrl = 'localhost:8000';
 
-  static Future<void> signUpCustomer(String username, String email, String password) async {
-    final body = {
-      'username': username,
-      'email': email,
-      'password': password
-    };
+  static Future<void> signUpCustomer(
+      String username, String email, String password) async {
+    final body = {'username': username, 'email': email, 'password': password};
 
     final response = await http.post(
-      Uri.https(apiUrl, '/auth'),
+      Uri.https(apiUrl, '/customer/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: jsonEncode(body),
     );
 
+    print(response.statusCode);
+    print(response.body);
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
@@ -42,7 +42,8 @@ class Server {
     }
   }
 
-  static Future<void> signUpBusiness(String businessName, String address, String email, String password) async {
+  static Future<void> signUpBusiness(String businessName, String address,
+      String email, String password) async {
     final body = {
       'business_name': businessName,
       'address': address,
@@ -51,17 +52,45 @@ class Server {
     };
 
     final response = await http.post(
-      Uri.https(apiUrl, '/auth'),
+      Uri.https(apiUrl, '/business/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: jsonEncode(body),
     );
 
+    print(response.statusCode);
+    print(response.body);
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
       case HttpStatus.badRequest:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<String> logIn(String email, String password) async {
+    final body = {'username': email, 'password': password};
+
+    final response = await http.post(
+      // TODO Find way to use Https
+      Uri.http(apiUrl, '/token/'),
+      headers: {
+        HttpHeaders.acceptHeader: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    );
+
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        String accessToken = jsonDecode(response.body)['access_token'];
+        return accessToken;
+      case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:
