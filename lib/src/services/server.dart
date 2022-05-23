@@ -41,4 +41,31 @@ class Server {
         throw const ServerException('Server Error - Please try again');
     }
   }
+
+  static Future<void> signUpBusiness(String businessName, String address, String email, String password) async {
+    final body = {
+      'business_name': businessName,
+      'address': address,
+      'email': email,
+      'password': password
+    };
+
+    final response = await http.post(
+      Uri.https(apiUrl, '/auth'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return;
+      case HttpStatus.badRequest:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
 }
