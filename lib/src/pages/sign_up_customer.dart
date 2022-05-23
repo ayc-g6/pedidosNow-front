@@ -83,7 +83,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
     if (_signUpCustomerFormKey.currentState!.validate()) {
       _signUpCustomerFormKey.currentState!.save();
       try {
-        Server.signUpCustomer(_username!, _email!, _password!);
+        await Server.signUpCustomer(_username!, _email!, _password!);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));

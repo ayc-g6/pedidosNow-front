@@ -88,7 +88,7 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
     if (_signUpBusinessFormKey.currentState!.validate()) {
       _signUpBusinessFormKey.currentState!.save();
       try {
-        //Server.signUp(_email!, _password!);
+        await Server.signUpBusiness(_businessName!, _address!, _email!, _password!);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
