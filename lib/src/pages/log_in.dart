@@ -1,4 +1,4 @@
-import 'package:envios_ya/src/pages/log_in_business.dart';
+import 'package:envios_ya/src/pages/sign_up_redirection.dart';
 import 'package:flutter/material.dart';
 
 class LogInPage extends StatelessWidget {
@@ -8,44 +8,132 @@ class LogInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: const Text('Log In as Business'),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LogInBusinessPage(),
-                        ),
-                      );
-                    },
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: LogInForm(),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: const Text('Log In as Customer'),
-                    onPressed: () {},
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Don\'t have an account?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const SignUpRedirectionPage(),
+                            ),
+                          );
+                        },
+                        child: const Text('Sign up'),
+                      )
+                    ],
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: const Text('Log In as Delivery'),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LogInForm extends StatefulWidget {
+  const LogInForm({Key? key}) : super(key: key);
+
+  @override
+  State<LogInForm> createState() => _LogInFormState();
+}
+
+class _LogInFormState extends State<LogInForm> {
+  bool _passwordObscured = true;
+  bool isLoading = false;
+
+  final _loginFormKey = GlobalKey<FormState>();
+  String? _email;
+  String? _password;
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    return null;
+  }
+
+  void _login() async {
+    setState(() {
+      isLoading = true;
+    });
+    FocusScope.of(context).unfocus();
+    if (_loginFormKey.currentState!.validate()) {
+      _loginFormKey.currentState!.save();
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _loginFormKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          TextFormField(
+            onSaved: (value) => _email = value,
+            validator: (value) => _validateEmail(value),
+            textInputAction: TextInputAction.next,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'example@email.com',
+              labelText: 'Email',
             ),
           ),
-        ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            onSaved: (value) => _password = value,
+            validator: (value) => _validatePassword(value),
+            obscureText: _passwordObscured,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: 'Password',
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _passwordObscured = !_passwordObscured;
+                  });
+                },
+                icon: Icon(_passwordObscured
+                    ? Icons.visibility_off
+                    : Icons.visibility),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          isLoading
+              ? const CircularProgressIndicator()
+              : ElevatedButton(
+                  onPressed: () => _login(),
+                  child: const Text('Sign in'),
+                ),
+        ],
       ),
     );
   }
