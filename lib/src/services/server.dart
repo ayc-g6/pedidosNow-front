@@ -76,8 +76,7 @@ class Server {
     final body = {'username': email, 'password': password};
 
     final response = await http.post(
-      // TODO Find way to use Https
-      Uri.http(apiUrl, '/token/'),
+      Uri.https(apiUrl, '/token/'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
