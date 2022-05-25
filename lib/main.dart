@@ -5,12 +5,21 @@ import 'package:provider/provider.dart';
 
 import 'package:envios_ya/src/models/auth.dart';
 
+import 'package:envios_ya/src/pages/new_product.dart';
 void main() {
   runApp(const EnviosYaApp());
 }
 
 class EnviosYaApp extends StatelessWidget {
   const EnviosYaApp({Key? key}) : super(key: key);
+
+  void _addProduct(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const NewProductPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +45,12 @@ class EnviosYaApp extends StatelessWidget {
                       ),
                     ],
                   ),
+                  //we should add other states (business vs client)
                   body: Center(
-                    child: Text('HOME'),
+                      child: ElevatedButton(
+                        child: Text('Add Product'),
+                        onPressed: () => _addProduct(context),
+                      )
                   ),
                 );
               case AuthState.loggedOut:
