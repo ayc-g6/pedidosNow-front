@@ -1,5 +1,7 @@
+import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum Account { business, customer, delivery }
 
@@ -99,6 +101,8 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
       _signUpCustomerFormKey.currentState!.save();
       try {
         await Server.signUpCustomer(_username!, _email!, _password!);
+        String accessToken = await Server.logIn(_email!, _password!);
+        Provider.of<Auth>(context, listen: false).updateAuth(accessToken);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
@@ -276,6 +280,8 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
       try {
         await Server.signUpBusiness(
             _businessName!, _address!, _email!, _password!);
+        String accessToken = await Server.logIn(_email!, _password!);
+        Provider.of<Auth>(context, listen: false).updateAuth(accessToken);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));

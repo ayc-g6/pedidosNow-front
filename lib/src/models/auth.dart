@@ -4,43 +4,43 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 enum AuthState { uninitialized, loggedOut, loggedIn }
 
 class Auth extends ChangeNotifier {
-  String? _userID;
-  String? _sessionToken;
+  String? _accessToken;
   AuthState _state;
 
   Auth() : _state = AuthState.uninitialized {
     loadAuth();
   }
 
-  String? get sessionToken => _sessionToken;
+  String? get accessToken => _accessToken;
   AuthState get state => _state;
 
   void loadAuth() async {
     const storage = FlutterSecureStorage();
-    final savedUserID = await storage.read(key: 'userID');
-    final savedSessionToken = await storage.read(key: 'sessionToken');
-    await updateAuth(savedUserID, savedSessionToken);
+    final savedAccessToken = await storage.read(key: 'accessToken');
+    await updateAuth(savedAccessToken);
   }
 
-  Future<void> updateAuth(String? userID, String? sessionToken) async {
+  /*  Receives an accessToken and updates its value. 
+   *  Notifies listeners if and only if there was a change in value or state.
+   */
+  Future<void> updateAuth(String? accessToken) async {
+    if (accessToken == _accessToken && _state != AuthState.uninitialized) {
+      return;
+    }
     const storage = FlutterSecureStorage();
-    if (userID != null && sessionToken != null) {
-      await storage.write(key: 'userID', value: userID);
-      await storage.write(key: 'sessionToken', value: sessionToken);
-      _userID = userID;
-      _sessionToken = sessionToken;
-      _state = AuthState.loggedIn;
-    } else {
-      await storage.delete(key: 'userID');
-      await storage.delete(key: 'sessionToken');
-      _userID = null;
-      _sessionToken = null;
+    if (accessToken == null) {
+      await storage.delete(key: 'accessToken');
+      _accessToken = null;
       _state = AuthState.loggedOut;
+    } else {
+      await storage.write(key: 'accessToken', value: accessToken);
+      _accessToken = accessToken;
+      _state = AuthState.loggedIn;
     }
     notifyListeners();
   }
 
   Future<void> deleteAuth() async {
-    await updateAuth(null, null);
+    await updateAuth(null);
   }
 }
