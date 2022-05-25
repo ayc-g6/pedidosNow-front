@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import '../models/product.dart';
+
 class ServerException implements Exception {
   final String message;
 
@@ -97,6 +99,27 @@ class Server {
         return accessTokenAndScope;
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<void> createProduct(Product product) async {
+    final response = await http.post(
+      Uri.https(apiUrl, '/product/'),
+      headers: {
+        HttpHeaders.acceptHeader: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(product),
+    );
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return;
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body);
         throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');
