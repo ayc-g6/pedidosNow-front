@@ -72,8 +72,13 @@ class Server {
     }
   }
 
-  static Future<String> logIn(String email, String password) async {
-    final body = {'username': email, 'password': password};
+  static Future<Map<String, String>> logIn(
+      String email, String password) async {
+    final body = {
+      'username': email,
+      'password': password,
+      'scope': 'business customer'
+    };
 
     final response = await http.post(
       Uri.https(apiUrl, '/token/'),
@@ -87,8 +92,9 @@ class Server {
     print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:
-        String accessToken = jsonDecode(response.body)['access_token'];
-        return accessToken;
+        Map<String, String> accessTokenAndScope =
+            Map.castFrom(json.decode(response.body));
+        return accessTokenAndScope;
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);

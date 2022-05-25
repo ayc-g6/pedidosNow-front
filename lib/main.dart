@@ -27,7 +27,19 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.uninitialized:
                 return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
               case AuthState.loggedIn:
-                return Scaffold(body: Center(child: Text('HOME')));
+                return Scaffold(
+                  appBar: AppBar(
+                    actions: [
+                      IconButton(
+                        onPressed: () => auth.delete(),
+                        icon: const Icon(Icons.logout_rounded),
+                      ),
+                    ],
+                  ),
+                  body: Center(
+                    child: Text('HOME'),
+                  ),
+                );
               case AuthState.loggedOut:
                 return LogInPage();
             }

@@ -101,14 +101,16 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
       _signUpCustomerFormKey.currentState!.save();
       try {
         await Server.signUpCustomer(_username!, _email!, _password!);
-        String accessToken = await Server.logIn(_email!, _password!);
-        Provider.of<Auth>(context, listen: false).updateAuth(accessToken);
+        final accessTokenAndScope = await Server.logIn(_email!, _password!);
+        await Provider.of<Auth>(context, listen: false)
+            .updateFromMap(accessTokenAndScope);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });
@@ -280,14 +282,16 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
       try {
         await Server.signUpBusiness(
             _businessName!, _address!, _email!, _password!);
-        String accessToken = await Server.logIn(_email!, _password!);
-        Provider.of<Auth>(context, listen: false).updateAuth(accessToken);
+        final accessTokenAndScope = await Server.logIn(_email!, _password!);
+        await Provider.of<Auth>(context, listen: false)
+            .updateFromMap(accessTokenAndScope);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });
