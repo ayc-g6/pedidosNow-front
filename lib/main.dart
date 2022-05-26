@@ -36,23 +36,39 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.uninitialized:
                 return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
               case AuthState.loggedIn:
-                return Scaffold(
-                  appBar: AppBar(
-                    actions: [
-                      IconButton(
-                        onPressed: () => auth.delete(),
-                        icon: const Icon(Icons.logout_rounded),
-                      ),
-                    ],
-                  ),
-                  //we should add other states (business vs client)
-                  body: Center(
-                      child: ElevatedButton(
-                        child: Text('Add Product'),
-                        onPressed: () => _addProduct(context),
-                      )
-                  ),
-                );
+                switch (auth.scope) {
+                    case AuthScope.customer:
+                        return Scaffold(
+                          appBar: AppBar(
+                            actions: [
+                              IconButton(
+                                onPressed: () => auth.delete(),
+                                icon: const Icon(Icons.logout_rounded),
+                              ),
+                            ],
+                          ),
+                          body: Center(
+                              child: Text('No se puede comprar todavía :(')
+                          ),
+                        );
+                    case AuthScope.business:
+                        return Scaffold(
+                          appBar: AppBar(
+                            actions: [
+                              IconButton(
+                                onPressed: () => auth.delete(),
+                                icon: const Icon(Icons.logout_rounded),
+                              ),
+                            ],
+                          ),
+                          body: Center(
+                              child: ElevatedButton(
+                                child: Text('Agregar producto'),
+                                onPressed: () => _addProduct(context),
+                              )
+                          ),
+                        );
+                }
               case AuthState.loggedOut:
                 return LogInPage();
             }
