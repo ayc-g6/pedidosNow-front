@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:envios_ya/src/models/auth.dart';
 
 import 'package:envios_ya/src/pages/new_product.dart';
+
 void main() {
   runApp(const EnviosYaApp());
 }
@@ -37,37 +38,35 @@ class EnviosYaApp extends StatelessWidget {
                 return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
               case AuthState.loggedIn:
                 switch (auth.scope) {
-                    case AuthScope.customer:
-                        return Scaffold(
-                          appBar: AppBar(
-                            actions: [
-                              IconButton(
-                                onPressed: () => auth.delete(),
-                                icon: const Icon(Icons.logout_rounded),
-                              ),
-                            ],
+                  case AuthScope.customer:
+                    return Scaffold(
+                      appBar: AppBar(
+                        actions: [
+                          IconButton(
+                            onPressed: () => auth.delete(),
+                            icon: const Icon(Icons.logout_rounded),
                           ),
-                          body: Center(
-                              child: Text('No se puede comprar todavía :(')
+                        ],
+                      ),
+                      body:
+                          Center(child: Text('No se puede comprar todavía :(')),
+                    );
+                  case AuthScope.business:
+                    return Scaffold(
+                      appBar: AppBar(
+                        actions: [
+                          IconButton(
+                            onPressed: () => auth.delete(),
+                            icon: const Icon(Icons.logout_rounded),
                           ),
-                        );
-                    case AuthScope.business:
-                        return Scaffold(
-                          appBar: AppBar(
-                            actions: [
-                              IconButton(
-                                onPressed: () => auth.delete(),
-                                icon: const Icon(Icons.logout_rounded),
-                              ),
-                            ],
-                          ),
-                          body: Center(
-                              child: ElevatedButton(
-                                child: Text('Agregar producto'),
-                                onPressed: () => _addProduct(context),
-                              )
-                          ),
-                        );
+                        ],
+                      ),
+                      body: Center(
+                          child: ElevatedButton(
+                        child: Text('Agregar producto'),
+                        onPressed: () => _addProduct(context),
+                      )),
+                    );
                 }
               case AuthState.loggedOut:
                 return LogInPage();
