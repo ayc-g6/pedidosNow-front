@@ -1,3 +1,4 @@
+import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../models/product.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({Key? key}) : super(key: key);
+  final Auth auth;
+  const ProductListPage({Key? key, required this.auth}) : super(key: key);
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -58,7 +60,15 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Product List')),
+      appBar: AppBar(
+        title: const Text('Product List'),
+        actions: [
+          IconButton(
+            onPressed: () => widget.auth.delete(),
+            icon: const Icon(Icons.logout_rounded),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () => Future.sync(
           () => _pagingController.refresh(),
