@@ -84,7 +84,8 @@ class _NewProductPageState extends State<NewProductPage> {
     if (_createProductFormKey.currentState!.validate()) {
       _createProductFormKey.currentState!.save();
       try {
-        await Server.createProduct(Product(_name!, _price!, _owner!));
+        await Server.createProduct(
+            Product(name: _name!, price: _price!, owner: _owner!));
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
