@@ -36,6 +36,8 @@ dependencies:
   http: ^0.13.4
   provider: ^6.0.2
   flutter_secure_storage: ^5.0.2
+  syncfusion_flutter_charts: ^20.1.56
+  infinite_scroll_pagination: ^3.2.0
 
 dev_dependencies:
   flutter_test:

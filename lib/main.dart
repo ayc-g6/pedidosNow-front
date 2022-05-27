@@ -5,12 +5,22 @@ import 'package:provider/provider.dart';
 
 import 'package:envios_ya/src/models/auth.dart';
 
+import 'package:envios_ya/src/pages/new_product.dart';
+
 void main() {
   runApp(const EnviosYaApp());
 }
 
 class EnviosYaApp extends StatelessWidget {
   const EnviosYaApp({Key? key}) : super(key: key);
+
+  void _addProduct(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const NewProductPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +37,37 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.uninitialized:
                 return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
               case AuthState.loggedIn:
-                return Scaffold(body: Center(child: Text('HOME')));
+                switch (auth.scope) {
+                  case AuthScope.customer:
+                    return Scaffold(
+                      appBar: AppBar(
+                        actions: [
+                          IconButton(
+                            onPressed: () => auth.delete(),
+                            icon: const Icon(Icons.logout_rounded),
+                          ),
+                        ],
+                      ),
+                      body:
+                          Center(child: Text('No se puede comprar todavía :(')),
+                    );
+                  case AuthScope.business:
+                    return Scaffold(
+                      appBar: AppBar(
+                        actions: [
+                          IconButton(
+                            onPressed: () => auth.delete(),
+                            icon: const Icon(Icons.logout_rounded),
+                          ),
+                        ],
+                      ),
+                      body: Center(
+                          child: ElevatedButton(
+                        child: Text('Agregar producto'),
+                        onPressed: () => _addProduct(context),
+                      )),
+                    );
+                }
               case AuthState.loggedOut:
                 return LogInPage();
             }

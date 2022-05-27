@@ -1,6 +1,8 @@
+import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/pages/sign_up_redirection.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LogInPage extends StatelessWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -85,13 +87,16 @@ class _LogInFormState extends State<LogInForm> {
     if (_loginFormKey.currentState!.validate()) {
       _loginFormKey.currentState!.save();
       try {
-        String accessToken = await Server.logIn(_email!, _password!);
+        final accessTokenAndScope = await Server.logIn(_email!, _password!);
+        await Provider.of<Auth>(context, listen: false)
+            .updateFromMap(accessTokenAndScope);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });
