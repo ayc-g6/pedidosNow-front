@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/pages/product_view.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -8,7 +9,13 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductViewPage(product: product)),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(children: [
