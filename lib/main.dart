@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/pages/log_in.dart';
+import 'package:envios_ya/src/pages/nutrition_facts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -69,7 +70,12 @@ class EnviosYaApp extends StatelessWidget {
                     );
                 }
               case AuthState.loggedOut:
-                return LogInPage();
+                return NutritionalInfoPage(
+                  calories: 30,
+                  carbs: 30,
+                  protein: 10,
+                  fat: 5,
+                );
             }
           },
         ),
