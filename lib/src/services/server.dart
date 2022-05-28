@@ -126,6 +126,24 @@ class Server {
     }
   }
 
+  static Future<Product> getProduct(int productId) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/product/$productId'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return Product.fromJson(jsonDecode(response.body));
+      case HttpStatus.notFound:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
   static Future<List<Product>> getProducts(int pageKey) async {
     final response = await http.get(
       Uri.https(apiUrl, '/product/all/$pageKey'),

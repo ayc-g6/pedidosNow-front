@@ -1,12 +1,12 @@
+import 'package:envios_ya/src/pages/bussiness_home.dart';
 import 'package:envios_ya/src/pages/log_in.dart';
 import 'package:envios_ya/src/pages/nutrition_facts.dart';
+import 'package:envios_ya/src/pages/products_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:envios_ya/src/models/auth.dart';
-
-import 'package:envios_ya/src/pages/new_product.dart';
 
 void main() {
   runApp(const EnviosYaApp());
@@ -14,14 +14,6 @@ void main() {
 
 class EnviosYaApp extends StatelessWidget {
   const EnviosYaApp({Key? key}) : super(key: key);
-
-  void _addProduct(context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const NewProductPage(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,46 +28,17 @@ class EnviosYaApp extends StatelessWidget {
           builder: (context, auth, child) {
             switch (auth.state) {
               case AuthState.uninitialized:
-                return Scaffold(body: Center(child: Text('SPLASH SCREEN')));
+                return const Scaffold(
+                    body: Center(child: Text('SPLASH SCREEN')));
               case AuthState.loggedIn:
                 switch (auth.scope) {
                   case AuthScope.customer:
-                    return Scaffold(
-                      appBar: AppBar(
-                        actions: [
-                          IconButton(
-                            onPressed: () => auth.delete(),
-                            icon: const Icon(Icons.logout_rounded),
-                          ),
-                        ],
-                      ),
-                      body:
-                          Center(child: Text('No se puede comprar todavía :(')),
-                    );
+                    return ProductListPage(auth: auth);
                   case AuthScope.business:
-                    return Scaffold(
-                      appBar: AppBar(
-                        actions: [
-                          IconButton(
-                            onPressed: () => auth.delete(),
-                            icon: const Icon(Icons.logout_rounded),
-                          ),
-                        ],
-                      ),
-                      body: Center(
-                          child: ElevatedButton(
-                        child: Text('Agregar producto'),
-                        onPressed: () => _addProduct(context),
-                      )),
-                    );
+                    return BussinessHomePage(auth: auth);
                 }
               case AuthState.loggedOut:
-                return NutritionalInfoPage(
-                  calories: 30,
-                  carbs: 30,
-                  protein: 10,
-                  fat: 5,
-                );
+                return const LogInPage();
             }
           },
         ),
