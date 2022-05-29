@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/pages/order_summary.dart';
 import 'package:flutter/material.dart';
 
 class ProductViewPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Envios Ya"),
+        title: const Text("Envios Ya"),
         automaticallyImplyLeading: true,
       ),
       body: Container(
@@ -37,9 +38,9 @@ class _ProductViewPageState extends State<ProductViewPage> {
                       flex: 3,
                       child: Container(
                         alignment: Alignment.bottomLeft,
-                        margin: EdgeInsets.only(left: 5),
+                        margin: const EdgeInsets.only(left: 5),
                         child: ElevatedButton(
-                          child: Text("Ver información nutricional"),
+                          child: const Text("Ver información nutricional"),
                           //TODO: go to te info nutri page
                           onPressed: () => {},
                         ),
@@ -49,12 +50,31 @@ class _ProductViewPageState extends State<ProductViewPage> {
                       child: Text("\$${widget.product.price}",
                           style: Theme.of(context).textTheme.titleLarge),
                     ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        alignment: Alignment.bottomRight,
+                        margin: const EdgeInsets.only(left: 5),
+                        child: ElevatedButton(
+                          child: const Text("Agregar a Pedido"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OrderSummaryPage(product: widget.product),
+                              ),
+                            );
+                          }, 
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
             elevation: 8,
-            margin: EdgeInsets.only(bottom: 10)),
+            margin: const EdgeInsets.only(bottom: 10)),
       ),
     );
   }

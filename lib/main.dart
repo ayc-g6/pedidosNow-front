@@ -37,7 +37,7 @@ class EnviosYaApp extends StatelessWidget {
                     return BussinessHomePage(auth: auth);
                 }
               case AuthState.loggedOut:
-                return const LogInPage();
+                return ProductListPage(auth: auth);
             }
           },
         ),
