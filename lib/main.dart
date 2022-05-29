@@ -17,14 +17,14 @@ class EnviosYaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Envios Ya',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChangeNotifierProvider(
-        create: (context) => Auth(),
-        child: Consumer<Auth>(
+    return ChangeNotifierProvider(
+      create: (context) => Auth(),
+      child: MaterialApp(
+        title: 'Envios Ya',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Consumer<Auth>(
           builder: (context, auth, child) {
             switch (auth.state) {
               case AuthState.uninitialized:
