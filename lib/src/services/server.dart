@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -22,12 +21,34 @@ class Server {
   // static const String apiUrl = 'pedidosnow-back.herokuapp.com';
   static const String apiUrl = 'localhost:8000';
 
+  static Future<void> getUserId() async {
+
+    final response = await http.get(
+      Uri.http(apiUrl, '/token/'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+
+    print(response.statusCode);
+    print(response.body);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
+      case HttpStatus.badRequest:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
   static Future<void> signUpCustomer(
       String username, String email, String password) async {
     final body = {'username': username, 'email': email, 'password': password};
 
     final response = await http.post(
-      Uri.https(apiUrl, '/customer/'),
+      Uri.http(apiUrl, '/customer/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
@@ -57,7 +78,7 @@ class Server {
     };
 
     final response = await http.post(
-      Uri.https(apiUrl, '/business/'),
+      Uri.http(apiUrl, '/business/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
@@ -86,7 +107,7 @@ class Server {
     };
 
     final response = await http.post(
-      Uri.https(apiUrl, '/token/'),
+      Uri.http(apiUrl, '/token/'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -110,7 +131,7 @@ class Server {
 
   static Future<void> createProduct(Product product) async {
     final response = await http.post(
-      Uri.https(apiUrl, '/product/'),
+      Uri.http(apiUrl, '/product/'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
         'Content-Type': 'application/json',
@@ -131,7 +152,7 @@ class Server {
 
   static Future<Product> getProduct(int productId) async {
     final response = await http.get(
-      Uri.https(apiUrl, '/product/$productId'),
+      Uri.http(apiUrl, '/product/$productId'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
@@ -149,7 +170,7 @@ class Server {
 
   static Future<List<Product>> getProducts(int pageKey) async {
     final response = await http.get(
-      Uri.https(apiUrl, '/product/all/$pageKey'),
+      Uri.http(apiUrl, '/product/all/$pageKey'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
         'Content-Type': 'application/json',
@@ -170,15 +191,14 @@ class Server {
     }
   }
 
-  static Future<void> createOrder(Product product, Int customerId) async {
-    
+  static Future<void> createOrder(Product product, int customerId) async {
     final response = await http.post(
-      Uri.https(apiUrl, '/order/'),
+      Uri.http(apiUrl, '/order/'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: json.encode(product.id),
+      body: json.encode(product.name),
     );
     print(response.statusCode);
     switch (response.statusCode) {

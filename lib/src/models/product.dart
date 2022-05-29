@@ -1,8 +1,6 @@
-import 'dart:ffi';
 
 class Product {
   Product({
-    required this.id,
     required this.name,
     required this.price,
     required this.owner,
@@ -12,7 +10,6 @@ class Product {
     required this.fat,
   });
 
-  String id;
   String name;
   double price;
   String owner;
@@ -24,7 +21,6 @@ class Product {
   final double fat;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'name': name,
         'price': price.toDouble(),
         'owner': owner,
@@ -35,7 +31,6 @@ class Product {
       };
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json['id'],
         name: json['name'],
         price: json['price'],
         owner: json['owner'],
