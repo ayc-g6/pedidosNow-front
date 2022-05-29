@@ -1,5 +1,6 @@
 import 'package:envios_ya/src/pages/bussiness_home.dart';
 import 'package:envios_ya/src/pages/log_in.dart';
+import 'package:envios_ya/src/pages/nutrition_facts.dart';
 import 'package:envios_ya/src/pages/products_list.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +17,14 @@ class EnviosYaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Envios Ya',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChangeNotifierProvider(
-        create: (context) => Auth(),
-        child: Consumer<Auth>(
+    return ChangeNotifierProvider(
+      create: (context) => Auth(),
+      child: MaterialApp(
+        title: 'Envios Ya',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Consumer<Auth>(
           builder: (context, auth, child) {
             switch (auth.state) {
               case AuthState.uninitialized:
@@ -32,9 +33,9 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.loggedIn:
                 switch (auth.scope) {
                   case AuthScope.customer:
-                    return ProductListPage(auth: auth);
+                    return ProductListPage();
                   case AuthScope.business:
-                    return BussinessHomePage(auth: auth);
+                    return BussinessHomePage();
                 }
               case AuthState.loggedOut:
                 return ProductListPage(auth: auth);

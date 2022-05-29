@@ -100,10 +100,12 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
     if (_signUpCustomerFormKey.currentState!.validate()) {
       _signUpCustomerFormKey.currentState!.save();
       try {
+        final navigator = Navigator.of(context);
         await Server.signUpCustomer(_username!, _email!, _password!);
         final accessTokenAndScope = await Server.logIn(_email!, _password!);
         await Provider.of<Auth>(context, listen: false)
             .updateFromMap(accessTokenAndScope);
+        navigator.popUntil((route) => route.isFirst);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
@@ -280,11 +282,13 @@ class _SignUpBusinessFormState extends State<SignUpBusinessForm> {
     if (_signUpBusinessFormKey.currentState!.validate()) {
       _signUpBusinessFormKey.currentState!.save();
       try {
+        final navigator = Navigator.of(context);
         await Server.signUpBusiness(
             _businessName!, _address!, _email!, _password!);
         final accessTokenAndScope = await Server.logIn(_email!, _password!);
         await Provider.of<Auth>(context, listen: false)
             .updateFromMap(accessTokenAndScope);
+        navigator.popUntil((route) => route.isFirst);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));

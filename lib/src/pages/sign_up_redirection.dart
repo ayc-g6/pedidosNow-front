@@ -15,10 +15,15 @@ class SignUpRedirectionPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text(
+                  "Sign up as...",
+                  style: Theme.of(context).textTheme.titleLarge
+                ),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    child: const Text('Sign Up as Business'),
+                    child: const Text('Business'),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -30,10 +35,11 @@ class SignUpRedirectionPage extends StatelessWidget {
                     },
                   ),
                 ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    child: const Text('Sign Up as Customer'),
+                    child: const Text('Customer'),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -45,10 +51,11 @@ class SignUpRedirectionPage extends StatelessWidget {
                     },
                   ),
                 ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    child: const Text('Sign Up as Delivery'),
+                    child: const Text('Delivery'),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
