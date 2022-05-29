@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
+import '../models/order.dart';
+
 
 class ServerException implements Exception {
   final String message;
@@ -16,8 +18,28 @@ class ServerException implements Exception {
 
 class Server {
   // TODO Cambiar por valor correcto
-  static const String apiUrl = 'pedidosnow-back.herokuapp.com';
-  // static const String apiUrl = 'localhost:8000';
+  // static const String apiUrl = 'pedidosnow-back.herokuapp.com';
+  static const String apiUrl = 'localhost:8000';
+
+  static Future<void> getUserId(
+      String username, String email, String password) async {
+
+    final response = await http.get(
+      Uri.https(apiUrl, '/token/'),
+    );
+
+    print(response.statusCode);
+    print(response.body);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
+      case HttpStatus.badRequest:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
 
   static Future<void> signUpCustomer(
       String username, String email, String password) async {
@@ -165,5 +187,26 @@ class Server {
       default:
         throw const ServerException('Server Error - Please try again');
     }
+  }
+
+  static Future<void> createOrder(Product product, int customerId) async {
+    // final response = await http.post(
+    //   Uri.https(apiUrl, '/order/'),
+    //   headers: {
+    //     HttpHeaders.acceptHeader: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: json.encode(),
+    // );
+    // print(response.statusCode);
+    // switch (response.statusCode) {
+    //   case HttpStatus.ok:
+    //     return;
+    //   case HttpStatus.unauthorized:
+    //     String errorMsg = jsonDecode(response.body);
+    //     throw ServerException(errorMsg);
+    //   default:
+    //     throw const ServerException('Server Error - Please try again');
+    // }
   }
 }

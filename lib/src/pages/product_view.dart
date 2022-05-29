@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/pages/order_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -35,11 +36,29 @@ class _ProductViewPageState extends State<ProductViewPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 32.0),
-                      child: Text("\$${widget.product.price}",
-                              style: Theme.of(context).textTheme.titleLarge
+                      child: ElevatedButton(
+                        child: const Text("Agregar a Pedido"),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderSummaryPage(product: widget.product),
+                            ),
+                          );
+                        }, 
                       )
-                    ),
+                    )
                   ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Text("\$${widget.product.price}",
+                          style: Theme.of(context).textTheme.titleLarge,
+                    )
+                  )
                 ),
                 NutritionalInfo(calories: widget.product.calories, 
                                 protein: widget.product.protein, 

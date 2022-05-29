@@ -1,6 +1,5 @@
 import 'package:envios_ya/src/pages/bussiness_home.dart';
 import 'package:envios_ya/src/pages/log_in.dart';
-import 'package:envios_ya/src/pages/nutrition_facts.dart';
 import 'package:envios_ya/src/pages/products_list.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +37,7 @@ class EnviosYaApp extends StatelessWidget {
                     return BussinessHomePage();
                 }
               case AuthState.loggedOut:
-                return const LogInPage();
+                return LogInPage();
             }
           },
         ),

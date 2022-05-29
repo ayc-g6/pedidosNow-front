@@ -1,3 +1,4 @@
+
 class Product {
   Product({
     required this.name,
