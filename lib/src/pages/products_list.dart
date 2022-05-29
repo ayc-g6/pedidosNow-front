@@ -3,12 +3,12 @@ import 'package:envios_ya/src/services/server.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 
 class ProductListPage extends StatefulWidget {
-  final Auth auth;
-  const ProductListPage({Key? key, required this.auth}) : super(key: key);
+  const ProductListPage({Key? key}) : super(key: key);
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -64,7 +64,9 @@ class _ProductListPageState extends State<ProductListPage> {
         title: const Text('Product List'),
         actions: [
           IconButton(
-            onPressed: () => widget.auth.delete(),
+            onPressed: () {
+              Provider.of<Auth>(context, listen: false).delete();
+            },
             icon: const Icon(Icons.logout_rounded),
           ),
         ],

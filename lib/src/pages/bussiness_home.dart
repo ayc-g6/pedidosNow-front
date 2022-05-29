@@ -1,11 +1,11 @@
 import 'package:envios_ya/src/pages/new_product.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/auth.dart';
 
 class BussinessHomePage extends StatelessWidget {
-  final Auth auth;
-  const BussinessHomePage({Key? key, required this.auth}) : super(key: key);
+  const BussinessHomePage({Key? key}) : super(key: key);
 
   void _addProduct(context) {
     Navigator.of(context).push(
@@ -21,7 +21,9 @@ class BussinessHomePage extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => auth.delete(),
+            onPressed: () {
+              Provider.of<Auth>(context, listen: false).delete();
+            },
             icon: const Icon(Icons.logout_rounded),
           ),
         ],
