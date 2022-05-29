@@ -33,9 +33,9 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.loggedIn:
                 switch (auth.scope) {
                   case AuthScope.customer:
-                    return ProductListPage(auth: auth);
+                    return ProductListPage();
                   case AuthScope.business:
-                    return BussinessHomePage(auth: auth);
+                    return BussinessHomePage();
                 }
               case AuthState.loggedOut:
                 return const LogInPage();

@@ -1,5 +1,13 @@
 class Product {
-  Product({required this.name, required this.price, required this.owner, required this.calories, required this.protein, required this.carbs, required this.fat});
+  Product({
+    required this.name,
+    required this.price,
+    required this.owner,
+    required this.calories,
+    required this.protein,
+    required this.carbs,
+    required this.fat,
+  });
 
   String name;
   double price;
@@ -28,6 +36,6 @@ class Product {
         calories: json['calories'],
         protein: json['protein'],
         carbs: json['carbs'],
-        fat: json['fat']
+        fat: json['fat'],
       );
 }
