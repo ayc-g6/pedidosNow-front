@@ -23,7 +23,8 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     FocusScope.of(context).unfocus();
     Auth auth = Provider.of<Auth>(context, listen: false);
     try {
-        await Server.createOrder(widget.product, 0);
+        String? customerId = await Server.getUserId(auth.accessToken);
+        await Server.createOrder(widget.product, customerId);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
