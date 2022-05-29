@@ -29,6 +29,7 @@ class NutritionalInfoPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 8.0),
             NutritionFact(
                 text: "Calories",
                 amount: calories,
@@ -79,10 +80,9 @@ class NutritionFact extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
           child: Icon(Icons.circle, color: circleColor),
         ),
-        const SizedBox(width: 16.0),
         RichText(
           text: TextSpan(
             style: Theme.of(context).textTheme.subtitle1,
@@ -101,16 +101,17 @@ class NutritionFact extends StatelessWidget {
 
 class MacronutrientsChart extends StatelessWidget {
   final List<MacronutrientsChartData> data;
+  late double _totalAmount;
 
-  const MacronutrientsChart({Key? key, required this.data}) : super(key: key);
+  MacronutrientsChart({Key? key, required this.data}) : super(key: key) {
+    _totalAmount = 0;
+    for (MacronutrientsChartData element in data) {
+      _totalAmount += element.amount;
+    }  
+  }
 
   @override
   Widget build(BuildContext context) {
-    double totalAmount = 0;
-    for (MacronutrientsChartData element in data) {
-      totalAmount += element.amount;
-    }
-
     return SfCircularChart(series: <CircularSeries>[
       DoughnutSeries<MacronutrientsChartData, String>(
           dataSource: data,
@@ -118,7 +119,7 @@ class MacronutrientsChart extends StatelessWidget {
           xValueMapper: (data, _) => data.name,
           yValueMapper: (data, _) => data.amount,
           dataLabelMapper: (data, _) =>
-              (data.amount / totalAmount * 100).toStringAsFixed(1) + "%",
+              (data.amount / _totalAmount * 100).toStringAsFixed(1) + "%",
           dataLabelSettings: const DataLabelSettings(
               isVisible: true,
               labelPosition: ChartDataLabelPosition.outside,

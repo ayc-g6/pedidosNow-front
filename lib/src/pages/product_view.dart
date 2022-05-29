@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/pages/nutrition_facts.dart';
 import 'package:flutter/material.dart';
 
 class ProductViewPage extends StatefulWidget {
@@ -11,6 +12,17 @@ class ProductViewPage extends StatefulWidget {
 }
 
 class _ProductViewPageState extends State<ProductViewPage> {
+  void _openNutritionalInfoPage(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NutritionalInfoPage(calories: widget.product.calories, 
+                                                  protein: widget.product.protein, 
+                                                  carbs: widget.product.carbs, 
+                                                  fat: widget.product.fat)
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +52,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
                         margin: EdgeInsets.only(left: 5),
                         child: ElevatedButton(
                           child: Text("Ver información nutricional"),
-                          //TODO: go to te info nutri page
-                          onPressed: () => {},
+                          onPressed: () => _openNutritionalInfoPage(context)
                         ),
                       ),
                     ),
