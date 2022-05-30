@@ -20,7 +20,6 @@ class Server {
   // static const String apiUrl = 'localhost:8000';
 
   static Future<String?> getUserId(String? token) async {
-
     final response = await http.get(
       Uri.https(apiUrl, '/token/'),
       headers: {
@@ -205,12 +204,34 @@ class Server {
       },
       body: json.encode(body),
     );
-    
+
     print(response.statusCode);
     print(jsonDecode(response.body));
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body);
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<List<dynamic>> getOrders(
+      String accessToken, int pageKey) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/order/all/$pageKey'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
+      },
+    );
+
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body);
         throw ServerException(errorMsg);
