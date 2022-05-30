@@ -144,7 +144,7 @@ class _LogInFormState extends State<LogInForm> {
               ? const CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: () => _login(),
-                  child: const Text('Sign in'),
+                  child: const Text('SIGN IN'),
                 ),
         ],
       ),

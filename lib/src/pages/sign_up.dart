@@ -197,7 +197,7 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
                       onPressed: () => _signUpCustomer(),
-                      child: const Text('Sign up'),
+                      child: const Text('SIGN UP'),
                     ),
             ],
           ),
