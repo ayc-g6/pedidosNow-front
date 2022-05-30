@@ -14,6 +14,11 @@ class OrderSummaryPage extends StatefulWidget {
 }
 
 class _OrderSummaryPageState extends State<OrderSummaryPage> {
+  /* FIXME Ojo. No usan esta variable. Yo tipicamente la uso
+   * Para tener el circulito de carga mientras se procesa el Server.call()
+   * Fijense por ejemplo LogIn o SignUp para ver como lo hago
+   * -- Santi
+   */
   bool _isLoading = false;
 
   void _createOrder() async {
@@ -23,13 +28,17 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     FocusScope.of(context).unfocus();
     Auth auth = Provider.of<Auth>(context, listen: false);
     try {
-        String? customerId = await Server.getUserId(auth.accessToken);
-        await Server.createOrder(widget.product, customerId);
-      } on ServerException catch (e) {
-        if (!mounted) return;
-        final snackBar = SnackBar(content: Text(e.message));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+      /* FIXME Incorrecto. Mandar el Auth.accessToken directamente 
+         * como header en createOrder. Luego, createOrder utiliza get_current_id
+         * para saber quien le está hablando. Si no se entiende preguntenme. --Santi
+        */
+      String? customerId = await Server.getUserId(auth.accessToken);
+      await Server.createOrder(widget.product, customerId);
+    } on ServerException catch (e) {
+      if (!mounted) return;
+      final snackBar = SnackBar(content: Text(e.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
     setState(() {
       _isLoading = false;
     });
@@ -45,39 +54,41 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       body: Container(
         height: 200,
         child: Card(
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    minVerticalPadding: 30,
-                    title: Text(widget.product.name,
-                        style: Theme.of(context).textTheme.titleLarge),
-                    subtitle: Text("De: ${widget.product.owner} | ${widget.product.price}"),
-                  ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListTile(
+                  minVerticalPadding: 30,
+                  title: Text(widget.product.name,
+                      style: Theme.of(context).textTheme.titleLarge),
+                  subtitle: Text(
+                      "De: ${widget.product.owner} | ${widget.product.price}"),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text("Total: \$${widget.product.price}",
-                          style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        margin: const EdgeInsets.only(left: 5),
-                        child: ElevatedButton(
-                          child: const Text("Comprar"),
-                          onPressed: () async => _createOrder(),
-                        ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text("Total: \$${widget.product.price}",
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      alignment: Alignment.bottomRight,
+                      margin: const EdgeInsets.only(left: 5),
+                      child: ElevatedButton(
+                        child: const Text("Comprar"),
+                        onPressed: () async => _createOrder(),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            elevation: 8,
-            margin: const EdgeInsets.only(bottom: 10)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          elevation: 8,
+          margin: const EdgeInsets.only(bottom: 10),
+        ),
       ),
     );
   }

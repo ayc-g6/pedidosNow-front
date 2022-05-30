@@ -22,19 +22,18 @@ class _ProductViewPageState extends State<ProductViewPage> {
       ),
       body: SingleChildScrollView(
         child: Card(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: ListTile(
-                        minVerticalPadding: 4.0,
-                        title: Text(widget.product.name,
+            child: Column(children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      minVerticalPadding: 4.0,
+                      title: Text(widget.product.name,
                           style: Theme.of(context).textTheme.titleLarge),
-                        subtitle: Text("De: ${widget.product.owner}"),
-                      ),
+                      subtitle: Text("De: ${widget.product.owner}"),
                     ),
-                    Padding(
+                  ),
+                  Padding(
                       padding: const EdgeInsets.only(right: 32.0),
                       child: ElevatedButton(
                         child: const Text("Agregar a Pedido"),
@@ -46,29 +45,26 @@ class _ProductViewPageState extends State<ProductViewPage> {
                                   OrderSummaryPage(product: widget.product),
                             ),
                           );
-                        }, 
-                      )
-                    )
-                  ],
-                ),
-                Align(
+                        },
+                      ))
+                ],
+              ),
+              Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
-                      child: Text("\$${widget.product.price}",
-                          style: Theme.of(context).textTheme.titleLarge,
-                    )
-                  )
-                ),
-                NutritionalInfo(calories: widget.product.calories, 
-                                protein: widget.product.protein, 
-                                carbs: widget.product.carbs, 
-                                fat: widget.product.fat)
-              ]
-            ),
-          elevation: 8.0,
-          margin: const EdgeInsets.all(16.0)
-        ),
+                      child: Text(
+                        "\$${widget.product.price}",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ))),
+              NutritionalInfo(
+                  calories: widget.product.calories,
+                  protein: widget.product.protein,
+                  carbs: widget.product.carbs,
+                  fat: widget.product.fat)
+            ]),
+            elevation: 8.0,
+            margin: const EdgeInsets.all(16.0)),
       ),
     );
   }
@@ -96,34 +92,34 @@ class NutritionalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-            children: [
-              const SizedBox(height: 8.0),
-              NutritionalFact(
-                  text: "Calories",
-                  amount: calories,
-                  unit: "cal",
-                  circleColor: _caloriesColor),
-              NutritionalFact(
-                  text: "Protein",
-                  amount: protein,
-                  unit: "g",
-                  circleColor: _proteinColor),
-              NutritionalFact(
-                  text: "Carbohydrates",
-                  amount: carbs,
-                  unit: "g",
-                  circleColor: _carbsColor),
-              NutritionalFact(
-                  text: "Fat", amount: fat, unit: "g", circleColor: _fatColor),
-              MacronutrientsChart(
-                data: [
-                  MacronutrientsChartData("Protein", protein, _proteinColor),
-                  MacronutrientsChartData("Carbohydrates", carbs, _carbsColor),
-                  MacronutrientsChartData("Fat", fat, _fatColor)
-                ],
-              ),
-            ],
-          );
+      children: [
+        const SizedBox(height: 8.0),
+        NutritionalFact(
+            text: "Calories",
+            amount: calories,
+            unit: "cal",
+            circleColor: _caloriesColor),
+        NutritionalFact(
+            text: "Protein",
+            amount: protein,
+            unit: "g",
+            circleColor: _proteinColor),
+        NutritionalFact(
+            text: "Carbohydrates",
+            amount: carbs,
+            unit: "g",
+            circleColor: _carbsColor),
+        NutritionalFact(
+            text: "Fat", amount: fat, unit: "g", circleColor: _fatColor),
+        MacronutrientsChart(
+          data: [
+            MacronutrientsChartData("Protein", protein, _proteinColor),
+            MacronutrientsChartData("Carbohydrates", carbs, _carbsColor),
+            MacronutrientsChartData("Fat", fat, _fatColor)
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -155,8 +151,9 @@ class NutritionalFact extends StatelessWidget {
             children: <TextSpan>[
               TextSpan(text: "$text: "),
               TextSpan(
-                  text: "$amount $unit",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                text: "$amount $unit",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         )
@@ -167,19 +164,20 @@ class NutritionalFact extends StatelessWidget {
 
 class MacronutrientsChart extends StatelessWidget {
   final List<MacronutrientsChartData> data;
-  late double _totalAmount;
+  late final double _totalAmount;
 
   MacronutrientsChart({Key? key, required this.data}) : super(key: key) {
     _totalAmount = 0;
     for (MacronutrientsChartData element in data) {
       _totalAmount += element.amount;
-    }  
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(series: <CircularSeries>[
-      DoughnutSeries<MacronutrientsChartData, String>(
+    return SfCircularChart(
+      series: <CircularSeries>[
+        DoughnutSeries<MacronutrientsChartData, String>(
           dataSource: data,
           pointColorMapper: (data, _) => data.color,
           xValueMapper: (data, _) => data.name,
@@ -189,8 +187,10 @@ class MacronutrientsChart extends StatelessWidget {
           dataLabelSettings: const DataLabelSettings(
               isVisible: true,
               labelPosition: ChartDataLabelPosition.outside,
-              useSeriesColor: true))
-    ]);
+              useSeriesColor: true),
+        )
+      ],
+    );
   }
 }
 

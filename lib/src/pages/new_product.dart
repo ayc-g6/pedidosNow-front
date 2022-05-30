@@ -64,6 +64,7 @@ class _NewProductPageState extends State<NewProductPage> {
           ),
           const SizedBox(height: 16.0),
           // TODO: Don't know why this is here, should be automatically
+          // TODO: Santi adhiere... deber{ia ser automático
           TextFormField(
             onSaved: (value) => _owner = value,
             textInputAction: TextInputAction.done,
@@ -131,8 +132,14 @@ class _NewProductPageState extends State<NewProductPage> {
     if (_createProductFormKey.currentState!.validate()) {
       _createProductFormKey.currentState!.save();
       try {
-        await Server.createProduct(
-            Product(name: _name!, price: _price!, owner: _owner!, calories: _calories!, protein: _protein!, carbs: _carbs!, fat: _fat!));
+        await Server.createProduct(Product(
+            name: _name!,
+            price: _price!,
+            owner: _owner!,
+            calories: _calories!,
+            protein: _protein!,
+            carbs: _carbs!,
+            fat: _fat!));
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
