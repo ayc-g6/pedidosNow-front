@@ -53,8 +53,6 @@ class Server {
       body: jsonEncode(body),
     );
 
-    print(response.statusCode);
-    print(response.body);
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
@@ -83,8 +81,6 @@ class Server {
       body: jsonEncode(body),
     );
 
-    print(response.statusCode);
-    print(response.body);
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
@@ -108,12 +104,11 @@ class Server {
       Uri.https(apiUrl, '/token/'),
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
+        HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
       },
       body: body,
     );
 
-    print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:
         Map<String, String> accessTokenAndScope =
@@ -131,12 +126,11 @@ class Server {
     final response = await http.post(
       Uri.https(apiUrl, '/product/'),
       headers: {
-        HttpHeaders.acceptHeader: 'application/json',
-        'Content-Type': 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: json.encode(product),
     );
-    print(response.statusCode);
+
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
@@ -155,6 +149,7 @@ class Server {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
     );
+
     switch (response.statusCode) {
       case HttpStatus.ok:
         return Product.fromJson(jsonDecode(response.body));
@@ -170,11 +165,10 @@ class Server {
     final response = await http.get(
       Uri.https(apiUrl, '/product/all/$pageKey'),
       headers: {
-        HttpHeaders.acceptHeader: 'application/json',
-        'Content-Type': 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
       },
     );
-    print(response.statusCode);
+
     switch (response.statusCode) {
       case HttpStatus.ok:
         List<Product> productsList(String str) => List<Product>.from(
@@ -199,8 +193,7 @@ class Server {
     final response = await http.post(
       Uri.https(apiUrl, '/order/'),
       headers: {
-        HttpHeaders.acceptHeader: 'application/json',
-        'Content-Type': 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: json.encode(body),
     );
@@ -228,7 +221,6 @@ class Server {
       },
     );
 
-    print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:
         return jsonDecode(response.body);
