@@ -164,7 +164,7 @@ class NutritionalFact extends StatelessWidget {
 
 class MacronutrientsChart extends StatelessWidget {
   final List<MacronutrientsChartData> data;
-  late final double _totalAmount;
+  late double _totalAmount;
 
   MacronutrientsChart({Key? key, required this.data}) : super(key: key) {
     _totalAmount = 0;

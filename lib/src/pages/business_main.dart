@@ -46,11 +46,11 @@ class _BusinessMainPageState extends State<BusinessMainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
+            icon: Icon(Icons.list_rounded),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
