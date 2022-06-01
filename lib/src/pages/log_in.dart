@@ -16,12 +16,20 @@ class LogInPage extends StatelessWidget {
             SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: LogInForm(),
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Image(image: AssetImage('images/enviosya_logo.png')),
+                          SizedBox(height: 64.0),
+                          LogInForm(),
+                        ],
+                      ),
+                    ),
                   ),
-                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

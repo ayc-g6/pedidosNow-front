@@ -14,22 +14,34 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Builder(
-              builder: (context) {
-                switch (accountType) {
-                  case Account.business:
-                    return const SignUpBusinessForm();
-                  case Account.customer:
-                    return const SignUpCustomerForm();
-                  case Account.delivery:
-                    return Container();
-                }
-              },
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(image: AssetImage('images/enviosya_logo.png')),
+                    const SizedBox(height: 64.0),
+                    Builder(
+                      builder: (context) {
+                        switch (accountType) {
+                          case Account.business:
+                            return const SignUpBusinessForm();
+                          case Account.customer:
+                            return const SignUpCustomerForm();
+                          case Account.delivery:
+                            return Container();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
