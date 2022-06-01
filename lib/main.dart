@@ -21,7 +21,7 @@ class EnviosYaApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Envios Ya',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
         ),
         home: Consumer<Auth>(
           builder: (context, auth, child) {
