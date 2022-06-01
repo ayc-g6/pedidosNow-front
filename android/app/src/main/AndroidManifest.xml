@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.envios_ya">
    <application
-        android:label="envios_ya"
+        android:label="Envios Ya"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
