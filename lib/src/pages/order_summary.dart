@@ -14,18 +14,9 @@ class OrderSummaryPage extends StatefulWidget {
 }
 
 class _OrderSummaryPageState extends State<OrderSummaryPage> {
-  /* FIXME Ojo. No usan esta variable. Yo tipicamente la uso
-   * Para tener el circulito de carga mientras se procesa el Server.call()
-   * Fijense por ejemplo LogIn o SignUp para ver como lo hago
-   * -- Santi
-   */
-  bool _isLoading = false;
-  int _quantity = 0;
+  int _quantity = 1;
 
   void _createOrder() async {
-    setState(() {
-      _isLoading = true;
-    });
     FocusScope.of(context).unfocus();
     Auth auth = Provider.of<Auth>(context, listen: false);
     try {
@@ -40,9 +31,6 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       final snackBar = SnackBar(content: Text(e.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -71,13 +59,13 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       child: ListTile(
                         title: Text(widget.product.name,
                           style: Theme.of(context).textTheme.titleLarge),
-                        subtitle: Text(widget.product.owner)
+                        subtitle: Text("${widget.product.owner}\n\$${widget.product.price}")
                       )
                     ),
                     IconButton(
                       icon: const Icon(Icons.remove),
                       onPressed: () => setState(() {
-                        if (_quantity > 0) {
+                        if (_quantity > 1) {
                           _quantity--;
                         }
                       }), 
@@ -85,7 +73,10 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     Container(
                       width: 48.0,
                       alignment: Alignment.center,
-                      child: Text('$_quantity')
+                      child: Text(
+                        '$_quantity',
+                        style: Theme.of(context).textTheme.bodyMedium
+                      )
                     ),
                     IconButton(
                       icon: const Icon(Icons.add),
@@ -94,7 +85,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                   ]
                 ),
                 ElevatedButton(
-                  child: const Text("Comprar"),
+                  child: Text("Comprar \$" + (_quantity * widget.product.price).toStringAsFixed(2)),
                   onPressed: () async => _createOrder(),
                 )
               ]),
@@ -105,86 +96,3 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     );
   }
 }
-
-/*
-class _OrderSummaryPageState extends State<OrderSummaryPage> {
-  /* FIXME Ojo. No usan esta variable. Yo tipicamente la uso
-   * Para tener el circulito de carga mientras se procesa el Server.call()
-   * Fijense por ejemplo LogIn o SignUp para ver como lo hago
-   * -- Santi
-   */
-  bool _isLoading = false;
-
-  void _createOrder() async {
-    setState(() {
-      _isLoading = true;
-    });
-    FocusScope.of(context).unfocus();
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    try {
-      /* FIXME Incorrecto. Mandar el Auth.accessToken directamente 
-         * como header en createOrder. Luego, createOrder utiliza get_current_id
-         * para saber quien le está hablando. Si no se entiende preguntenme. --Santi
-        */
-      String? customerId = await Server.getUserId(auth.accessToken);
-      await Server.createOrder(widget.product, customerId);
-    } on ServerException catch (e) {
-      if (!mounted) return;
-      final snackBar = SnackBar(content: Text(e.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Envios Ya"),
-        automaticallyImplyLeading: true,
-      ),
-      body: Container(
-        height: 200,
-        child: Card(
-          child: Column(
-            children: [
-              Expanded(
-                child: ListTile(
-                  minVerticalPadding: 30,
-                  title: Text(widget.product.name,
-                      style: Theme.of(context).textTheme.titleLarge),
-                  subtitle: Text(
-                      "De: ${widget.product.owner} | ${widget.product.price}"),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text("Total: \$${widget.product.price}",
-                        style: Theme.of(context).textTheme.titleLarge),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      alignment: Alignment.bottomRight,
-                      margin: const EdgeInsets.only(left: 5),
-                      child: ElevatedButton(
-                        child: const Text("Comprar"),
-                        onPressed: () async => _createOrder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          elevation: 8,
-          margin: const EdgeInsets.only(bottom: 10),
-        ),
-      ),
-    );
-  }
-}
-*/
