@@ -140,12 +140,14 @@ class _NewProductPageState extends State<NewProductPage> {
             protein: _protein!,
             carbs: _carbs!,
             fat: _fat!));
+        if (mounted) Navigator.of(context).pop();
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+    if (!mounted) return;
     setState(() {
       _isLoading = false;
     });
