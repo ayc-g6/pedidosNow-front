@@ -19,28 +19,6 @@ class Server {
   static const String apiUrl = 'pedidosnow-back.herokuapp.com';
   // static const String apiUrl = 'localhost:8000';
 
-  static Future<String?> getUserId(String? token) async {
-    final response = await http.get(
-      Uri.https(apiUrl, '/token/'),
-      headers: {
-        HttpHeaders.acceptHeader: 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    print(response.statusCode);
-    print(response.body);
-    switch (response.statusCode) {
-      case HttpStatus.ok:
-        return jsonDecode(response.body)['id'];
-      case HttpStatus.badRequest:
-        String errorMsg = jsonDecode(response.body)['detail'];
-        throw ServerException(errorMsg);
-      default:
-        throw const ServerException('Server Error - Please try again');
-    }
-  }
-
   static Future<void> signUpCustomer(
       String username, String email, String password) async {
     final body = {'username': username, 'email': email, 'password': password};
