@@ -34,9 +34,9 @@ class _ProductViewPageState extends State<ProductViewPage> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(right: 32.0),
+                      padding: const EdgeInsets.only(right: 16.0),
                       child: ElevatedButton(
-                        child: const Text("Agregar a Pedido"),
+                        child: const Text("Pedir Producto"),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -164,7 +164,7 @@ class NutritionalFact extends StatelessWidget {
 
 class MacronutrientsChart extends StatelessWidget {
   final List<MacronutrientsChartData> data;
-  late final double _totalAmount;
+  late double _totalAmount;
 
   MacronutrientsChart({Key? key, required this.data}) : super(key: key) {
     _totalAmount = 0;

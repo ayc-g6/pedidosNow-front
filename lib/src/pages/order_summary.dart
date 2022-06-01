@@ -20,6 +20,100 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
    * -- Santi
    */
   bool _isLoading = false;
+  int _quantity = 0;
+
+  void _createOrder() async {
+    setState(() {
+      _isLoading = true;
+    });
+    FocusScope.of(context).unfocus();
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    try {
+      /* FIXME Incorrecto. Mandar el Auth.accessToken directamente 
+         * como header en createOrder. Luego, createOrder utiliza get_current_id
+         * para saber quien le está hablando. Si no se entiende preguntenme. --Santi
+        */
+      String? customerId = await Server.getUserId(auth.accessToken);
+      await Server.createOrder(widget.product, customerId);
+    } on ServerException catch (e) {
+      if (!mounted) return;
+      final snackBar = SnackBar(content: Text(e.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Envios Ya"),
+        automaticallyImplyLeading: true,
+      ),
+      body: SingleChildScrollView(
+        child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    "Tu compra", 
+                    style: Theme.of(context).textTheme.titleLarge
+                  )
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.fastfood_outlined),
+                    Expanded(
+                      child: ListTile(
+                        title: Text(widget.product.name,
+                          style: Theme.of(context).textTheme.titleLarge),
+                        subtitle: Text(widget.product.owner)
+                      )
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () => setState(() {
+                        if (_quantity > 0) {
+                          _quantity--;
+                        }
+                      }), 
+                    ),
+                    Container(
+                      width: 48.0,
+                      alignment: Alignment.center,
+                      child: Text('$_quantity')
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () => setState(() { _quantity++; }), 
+                    ),
+                  ]
+                ),
+                ElevatedButton(
+                  child: const Text("Comprar"),
+                  onPressed: () async => _createOrder(),
+                )
+              ]),
+            ),
+          elevation: 8.0,
+          margin: const EdgeInsets.all(16.0)),
+      ),
+    );
+  }
+}
+
+/*
+class _OrderSummaryPageState extends State<OrderSummaryPage> {
+  /* FIXME Ojo. No usan esta variable. Yo tipicamente la uso
+   * Para tener el circulito de carga mientras se procesa el Server.call()
+   * Fijense por ejemplo LogIn o SignUp para ver como lo hago
+   * -- Santi
+   */
+  bool _isLoading = false;
 
   void _createOrder() async {
     setState(() {
@@ -93,3 +187,4 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
     );
   }
 }
+*/
