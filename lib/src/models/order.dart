@@ -1,5 +1,6 @@
 class Order {
   Order({
+    this.id,
     required this.productId,
     required this.businessId,
     required this.customerId,
@@ -8,6 +9,7 @@ class Order {
     required this.deliveryAddress
   });
 
+  String? id;
   String? productId;
   String? businessId;
   String? customerId;
@@ -25,6 +27,7 @@ class Order {
       };
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
+        id: json['id'],
         productId: json['product_id'],
         businessId: json['business_id'],
         customerId: json['customer_id'],

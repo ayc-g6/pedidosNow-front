@@ -1,6 +1,8 @@
 class Product {
   Product({
+    this.id,
     required this.name,
+    this.owner,
     required this.price,
     required this.calories,
     required this.protein,
@@ -8,7 +10,9 @@ class Product {
     required this.fat,
   });
 
+  String? id;
   String name;
+  String? owner;
   double price;
 
   // Nutritional facts:
@@ -27,7 +31,9 @@ class Product {
       };
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
+        id: json['id'],
         name: json['name'],
+        owner: json['owner'],
         price: json['price'],
         calories: json['calories'],
         protein: json['protein'],
