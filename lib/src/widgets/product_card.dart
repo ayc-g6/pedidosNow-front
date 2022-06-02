@@ -23,7 +23,7 @@ class ProductCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(product.price.toStringAsFixed(2)),
           const SizedBox(height: 10),
-          Text(product.owner)
+          // Text(product.owner) TODO CHECK THIS
         ]),
       ),
     );

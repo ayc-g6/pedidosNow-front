@@ -59,7 +59,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       child: ListTile(
                         title: Text(widget.product.name,
                           style: Theme.of(context).textTheme.titleLarge),
-                        subtitle: Text("${widget.product.owner}\n\$${widget.product.price}")
+                        //subtitle: Text("${widget.product.owner}\n\$${widget.product.price}") TODO check this
                       )
                     ),
                     IconButton(

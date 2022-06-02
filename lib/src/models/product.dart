@@ -2,7 +2,6 @@ class Product {
   Product({
     required this.name,
     required this.price,
-    required this.owner,
     required this.calories,
     required this.protein,
     required this.carbs,
@@ -11,7 +10,6 @@ class Product {
 
   String name;
   double price;
-  String owner;
 
   // Nutritional facts:
   final double calories;
@@ -22,7 +20,6 @@ class Product {
   Map<String, dynamic> toJson() => {
         'name': name,
         'price': price.toDouble(),
-        'owner': owner,
         'calories': calories,
         'protein': protein,
         'carbs': carbs,
@@ -32,7 +29,6 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         name: json['name'],
         price: json['price'],
-        owner: json['owner'],
         calories: json['calories'],
         protein: json['protein'],
         carbs: json['carbs'],

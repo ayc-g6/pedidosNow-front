@@ -122,11 +122,12 @@ class Server {
     }
   }
 
-  static Future<void> createProduct(Product product) async {
+  static Future<void> createProduct(Product product, String accessToken) async {
     final response = await http.post(
       Uri.https(apiUrl, '/product/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader:  'Bearer $accessToken',
       },
       body: json.encode(product),
     );
