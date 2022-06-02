@@ -62,7 +62,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
               child: Column(children: [
                 Align(
                     alignment: Alignment.topCenter,
-                    child: Text("Tu compra",
+                    child: Text("Your purchase",
                         style: Theme.of(context).textTheme.titleLarge)),
                 Row(children: [
                   const Icon(Icons.fastfood_outlined),
@@ -79,20 +79,20 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                      TextFormField(
-                        onSaved: (value) => _deliveryAddress = value,
-                        validator: (value) => _validateAddress(value),
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Delivery Address',
-                        ),
-                      ),
-                      ElevatedButton(
-                        child: const Text("Confirmar Compra"),
-                        onPressed: () async => _createOrder(),
-                      )
-                    ])),
+                          TextFormField(
+                            onSaved: (value) => _deliveryAddress = value,
+                            validator: (value) => _validateAddress(value),
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Delivery Address',
+                            ),
+                          ),
+                          ElevatedButton(
+                            child: const Text("Confirm Purchase"),
+                            onPressed: () async => _createOrder(),
+                          )
+                        ])),
               ]),
             ),
             elevation: 8.0,

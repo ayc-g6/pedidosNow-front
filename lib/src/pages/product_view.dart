@@ -36,7 +36,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: ElevatedButton(
-                        child: const Text("Pedir Producto"),
+                        child: const Text("Order Product"),
                         onPressed: () {
                           Navigator.push(
                             context,

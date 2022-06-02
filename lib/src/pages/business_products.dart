@@ -15,7 +15,7 @@ class BusinessProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: const Text('Agregar producto'),
+      child: const Text('Add product'),
       onPressed: () => _addProduct(context),
     );
   }

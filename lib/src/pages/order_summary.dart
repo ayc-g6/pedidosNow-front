@@ -28,26 +28,25 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               child: Column(children: [
                 Align(
                     alignment: Alignment.topCenter,
-                    child: Text("Tu compra",
+                    child: Text("Your purchase",
                         style: Theme.of(context).textTheme.titleLarge)),
                 Row(children: [
                   const Icon(Icons.fastfood_outlined),
                   Expanded(
                       child: ListTile(
-                        title: Text(widget.product.name,
-                          style: Theme.of(context).textTheme.titleLarge),
-                        //subtitle: Text("${widget.product.owner}\n\$${widget.product.price}") TODO check this
-                      )
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () => setState(() {
-                        if (_quantity > 1) {
-                          _quantity--;
-                        }
-                      }), 
-                    ),
-                    Container(
+                    title: Text(widget.product.name,
+                        style: Theme.of(context).textTheme.titleLarge),
+                    //subtitle: Text("${widget.product.owner}\n\$${widget.product.price}") TODO check this
+                  )),
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () => setState(() {
+                      if (_quantity > 1) {
+                        _quantity--;
+                      }
+                    }),
+                  ),
+                  Container(
                       width: 48.0,
                       alignment: Alignment.center,
                       child: Text('$_quantity',
@@ -59,18 +58,29 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     }),
                   ),
                 ]),
-                ElevatedButton(
-                  child: Text("Comprar \$" +
-                      (_quantity * widget.product.price).toStringAsFixed(2)),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            OrderConfirmationPage(product: widget.product, quantity: _quantity),
-                      ),
-                    );
-                  },
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Chip(
+                      backgroundColor: Colors.red,
+                      label: Text(
+                          '\$ ${(_quantity * widget.product.price).toStringAsFixed(2)}'),
+                      labelStyle: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      child: const Text("Buy"),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderConfirmationPage(
+                                product: widget.product, quantity: _quantity),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 )
               ]),
             ),
