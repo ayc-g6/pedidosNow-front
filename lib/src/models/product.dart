@@ -10,7 +10,7 @@ class Product {
     required this.fat,
   });
 
-  String? id;
+  int? id;
   String name;
   String? owner;
   double price;
