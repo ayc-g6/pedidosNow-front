@@ -141,9 +141,13 @@ class Server {
     }
   }
 
-  static Future<List<Product>> getProducts(int pageKey) async {
+  static Future<List<Product>> getProducts(int pageKey,
+      {String? productName}) async {
+    final Map<String, dynamic> queryParams = {};
+    if (productName != null) queryParams['name'] = productName;
+
     final response = await http.get(
-      Uri.https(apiUrl, '/product/all/$pageKey'),
+      Uri.https(apiUrl, '/product/all/$pageKey', queryParams),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
