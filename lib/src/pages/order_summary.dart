@@ -1,7 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
-import 'package:envios_ya/src/services/server.dart';
-import '../models/auth.dart';
-import 'package:provider/provider.dart';
+import 'package:envios_ya/src/pages/order_confirmation.dart';
 import 'package:flutter/material.dart';
 
 class OrderSummaryPage extends StatefulWidget {
@@ -16,23 +14,6 @@ class OrderSummaryPage extends StatefulWidget {
 class _OrderSummaryPageState extends State<OrderSummaryPage> {
   int _quantity = 1;
 
-  void _createOrder() async {
-    FocusScope.of(context).unfocus();
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    try {
-      /* FIXME Incorrecto. Mandar el Auth.accessToken directamente 
-         * como header en createOrder. Luego, createOrder utiliza get_current_id
-         * para saber quien le está hablando. Si no se entiende preguntenme. --Santi
-        */
-      String? customerId = await Server.getUserId(auth.accessToken);
-      await Server.createOrder(widget.product, customerId);
-    } on ServerException catch (e) {
-      if (!mounted) return;
-      final snackBar = SnackBar(content: Text(e.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,52 +27,54 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(children: [
                 Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    "Tu compra", 
-                    style: Theme.of(context).textTheme.titleLarge
-                  )
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.fastfood_outlined),
-                    Expanded(
+                    alignment: Alignment.topCenter,
+                    child: Text("Tu compra",
+                        style: Theme.of(context).textTheme.titleLarge)),
+                Row(children: [
+                  const Icon(Icons.fastfood_outlined),
+                  Expanded(
                       child: ListTile(
-                        title: Text(widget.product.name,
-                          style: Theme.of(context).textTheme.titleLarge),
-                        subtitle: Text("${widget.product.owner}\n\$${widget.product.price}")
-                      )
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () => setState(() {
-                        if (_quantity > 1) {
-                          _quantity--;
-                        }
-                      }), 
-                    ),
-                    Container(
+                          title: Text(widget.product.name,
+                              style: Theme.of(context).textTheme.titleLarge),
+                          subtitle: Text(
+                              "${widget.product.owner}\n\$${widget.product.price}"))),
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () => setState(() {
+                      if (_quantity > 1) {
+                        _quantity--;
+                      }
+                    }),
+                  ),
+                  Container(
                       width: 48.0,
                       alignment: Alignment.center,
-                      child: Text(
-                        '$_quantity',
-                        style: Theme.of(context).textTheme.bodyMedium
-                      )
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () => setState(() { _quantity++; }), 
-                    ),
-                  ]
-                ),
+                      child: Text('$_quantity',
+                          style: Theme.of(context).textTheme.bodyMedium)),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () => setState(() {
+                      _quantity++;
+                    }),
+                  ),
+                ]),
                 ElevatedButton(
-                  child: Text("Comprar \$" + (_quantity * widget.product.price).toStringAsFixed(2)),
-                  onPressed: () async => _createOrder(),
+                  child: Text("Comprar \$" +
+                      (_quantity * widget.product.price).toStringAsFixed(2)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OrderConfirmationPage(product: widget.product, quantity: _quantity),
+                      ),
+                    );
+                  },
                 )
               ]),
             ),
-          elevation: 8.0,
-          margin: const EdgeInsets.all(16.0)),
+            elevation: 8.0,
+            margin: const EdgeInsets.all(16.0)),
       ),
     );
   }

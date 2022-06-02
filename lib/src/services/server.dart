@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
+import '../models/order.dart';
 
 class ServerException implements Exception {
   final String message;
@@ -161,19 +162,16 @@ class Server {
     }
   }
 
-  static Future<void> createOrder(Product product, String? customerId) async {
-    print(customerId);
-    final body = {
-      'customer_id': customerId,
-      'product_id': product.name,
-    };
-
+  static Future<void> createOrder(Order order, String? accessToken) async {
+    print(json.encode(order));
+    print(accessToken);
     final response = await http.post(
       Uri.https(apiUrl, '/order/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
       },
-      body: json.encode(body),
+      body: json.encode(order),
     );
 
     print(response.statusCode);
