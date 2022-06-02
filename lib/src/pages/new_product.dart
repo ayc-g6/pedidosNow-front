@@ -1,6 +1,8 @@
 import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
+import '../models/auth.dart';
+import 'package:provider/provider.dart';
 
 class NewProductPage extends StatefulWidget {
   const NewProductPage({Key? key}) : super(key: key);
@@ -12,7 +14,6 @@ class NewProductPage extends StatefulWidget {
 class _NewProductPageState extends State<NewProductPage> {
   String? _name;
   double? _price;
-  String? _owner;
 
   // Nutritional facts:
   double? _calories;
@@ -60,17 +61,6 @@ class _NewProductPageState extends State<NewProductPage> {
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Price',
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          // TODO: Don't know why this is here, should be automatically
-          // TODO: Santi adhiere... deber{ia ser automático
-          TextFormField(
-            onSaved: (value) => _owner = value,
-            textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Owner',
             ),
           ),
           const SizedBox(height: 16.0),
@@ -129,17 +119,17 @@ class _NewProductPageState extends State<NewProductPage> {
       _isLoading = true;
     });
     FocusScope.of(context).unfocus();
+    Auth auth = Provider.of<Auth>(context, listen: false);
     if (_createProductFormKey.currentState!.validate()) {
       _createProductFormKey.currentState!.save();
       try {
         await Server.createProduct(Product(
             name: _name!,
             price: _price!,
-            owner: _owner!,
             calories: _calories!,
             protein: _protein!,
             carbs: _carbs!,
-            fat: _fat!));
+            fat: _fat!), auth.accessToken!);
         if (mounted) Navigator.of(context).pop();
       } on ServerException catch (e) {
         if (!mounted) return;

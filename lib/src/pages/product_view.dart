@@ -30,7 +30,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
                       minVerticalPadding: 4.0,
                       title: Text(widget.product.name,
                           style: Theme.of(context).textTheme.titleLarge),
-                      subtitle: Text("De: ${widget.product.owner}"),
+//                      subtitle: Text("De: ${widget.product.owner}"), TODO check this
                     ),
                   ),
                   Padding(
