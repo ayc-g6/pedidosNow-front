@@ -1,6 +1,8 @@
+import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/pages/order_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ProductViewPage extends StatefulWidget {
@@ -33,20 +35,22 @@ class _ProductViewPageState extends State<ProductViewPage> {
 //                      subtitle: Text("De: ${widget.product.owner}"), TODO check this
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: ElevatedButton(
-                        child: const Text("Order Product"),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderSummaryPage(product: widget.product),
-                            ),
-                          );
-                        },
-                      ))
+                  if (Provider.of<Auth>(context, listen: false).scope ==
+                      AuthScope.customer)
+                    Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: ElevatedButton(
+                          child: const Text("Order Product"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OrderSummaryPage(product: widget.product),
+                              ),
+                            );
+                          },
+                        ))
                 ],
               ),
               Align(
