@@ -1,6 +1,6 @@
 import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/services/server.dart';
-import 'package:envios_ya/src/widgets/page_reloader.dart';
+import 'package:envios_ya/src/observers/page_reloader.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -8,19 +8,19 @@ import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 
-class ProductListPage extends StatefulWidget {
+class ProductList extends StatefulWidget {
   final Future<List<Product>> Function(int index) loadProducts;
   final PageReloadObserver? pageReloadObserver;
 
-  const ProductListPage(
+  const ProductList(
       {Key? key, required this.loadProducts, this.pageReloadObserver})
       : super(key: key);
 
   @override
-  State<ProductListPage> createState() => _ProductListPageState();
+  State<ProductList> createState() => _ProductListState();
 }
 
-class _ProductListPageState extends State<ProductListPage> {
+class _ProductListState extends State<ProductList> {
   final int _pageSize = 5;
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 0);
@@ -94,6 +94,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   void dispose() {
+    widget.pageReloadObserver?.clearListeners();
     _pagingController.dispose();
     super.dispose();
   }

@@ -1,4 +1,4 @@
-import 'package:envios_ya/src/pages/products_list.dart';
+import 'package:envios_ya/src/widgets/products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class CustomerProductList extends StatelessWidget {
             ),
           ],
         ),
-        body: ProductListPage(
+        body: ProductList(
             loadProducts: (index) async => Server.getProducts(index)));
   }
 }

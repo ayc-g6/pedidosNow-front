@@ -1,7 +1,7 @@
 import 'package:envios_ya/src/pages/business_home.dart';
 import 'package:envios_ya/src/pages/business_orders.dart';
 import 'package:envios_ya/src/pages/business_products.dart';
-import 'package:envios_ya/src/widgets/page_reloader.dart';
+import 'package:envios_ya/src/observers/page_reloader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

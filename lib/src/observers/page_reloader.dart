@@ -14,4 +14,8 @@ class PageReloadObserver {
       _listener.call();
     }
   }
+
+  void clearListeners() {
+    _listeners.clear();
+  }
 }
