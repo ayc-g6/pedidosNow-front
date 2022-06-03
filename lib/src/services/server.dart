@@ -167,6 +167,30 @@ class Server {
     }
   }
 
+  static Future<List<Product>> getBussinessProducts(
+      int pageKey, String? accessToken) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/business/product/$pageKey'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        List<Product> productsList(String str) => List<Product>.from(
+            json.decode(str).map((x) => Product.fromJson(x)));
+
+        return productsList(response.body);
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body);
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
   static Future<void> createOrder(Order order, String? accessToken) async {
     print(json.encode(order));
     print(accessToken);

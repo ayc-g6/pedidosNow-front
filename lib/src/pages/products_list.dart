@@ -1,14 +1,14 @@
-import 'package:envios_ya/src/models/auth.dart';
-import 'package:envios_ya/src/services/server.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({Key? key}) : super(key: key);
+  final Future<List<Product>> Function(int index) loadProducts;
+
+  const ProductListPage({Key? key, required this.loadProducts})
+      : super(key: key);
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -29,7 +29,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await Server.getProducts(pageKey);
+      final newItems = await widget.loadProducts(pageKey);
 
       // If not mounted, using page controller throws Error.
       if (!mounted) return;
@@ -59,29 +59,16 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product List'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Provider.of<Auth>(context, listen: false).delete();
-            },
-            icon: const Icon(Icons.logout_rounded),
-          ),
-        ],
+    return RefreshIndicator(
+      onRefresh: () => Future.sync(
+        () => _pagingController.refresh(),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => Future.sync(
-          () => _pagingController.refresh(),
-        ),
-        child: PagedListView<int, Product>(
-          padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<Product>(
-            itemBuilder: (context, item, index) => Card(
-              child: ProductCard(product: item),
-            ),
+      child: PagedListView<int, Product>(
+        padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Product>(
+          itemBuilder: (context, item, index) => Card(
+            child: ProductCard(product: item),
           ),
         ),
       ),

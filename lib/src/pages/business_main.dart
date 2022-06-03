@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/auth.dart';
+import 'new_product.dart';
 
 class BusinessMainPage extends StatefulWidget {
   const BusinessMainPage({Key? key}) : super(key: key);
@@ -21,6 +22,14 @@ class _BusinessMainPageState extends State<BusinessMainPage> {
     BusinessOrders(),
     BusinessProducts(),
   ];
+
+  void _addProduct(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const NewProductPage(),
+      ),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,6 +70,12 @@ class _BusinessMainPageState extends State<BusinessMainPage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+      floatingActionButton: _selectedIndex == 2
+          ? FloatingActionButton(
+              onPressed: () => _addProduct(context),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

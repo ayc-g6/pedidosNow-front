@@ -1,22 +1,17 @@
-import 'package:envios_ya/src/pages/new_product.dart';
+import 'package:envios_ya/src/pages/products_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/auth.dart';
+import '../services/server.dart';
 
 class BusinessProducts extends StatelessWidget {
   const BusinessProducts({Key? key}) : super(key: key);
 
-  void _addProduct(context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const NewProductPage(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: const Text('Add product'),
-      onPressed: () => _addProduct(context),
-    );
+    return ProductListPage(
+        loadProducts: (index) async => Server.getBussinessProducts(
+            index, Provider.of<Auth>(context, listen: false).accessToken));
   }
 }
