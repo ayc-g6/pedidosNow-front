@@ -106,7 +106,7 @@ class Server {
       Uri.https(apiUrl, '/product/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader:  'Bearer $accessToken',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
       },
       body: json.encode(product),
     );
@@ -142,9 +142,10 @@ class Server {
   }
 
   static Future<List<Product>> getProducts(int pageKey,
-      {String? productName}) async {
+      [String? productName]) async {
     final Map<String, dynamic> queryParams = {};
-    if (productName != null) queryParams['name'] = productName;
+    if (productName != null && productName.isNotEmpty)
+      queryParams['name'] = productName;
 
     final response = await http.get(
       Uri.https(apiUrl, '/product/all/$pageKey', queryParams),

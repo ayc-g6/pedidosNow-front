@@ -22,7 +22,8 @@ class CustomerProductList extends StatelessWidget {
             ),
           ],
         ),
-        body: ProductListPage(
-            loadProducts: (index) async => Server.getProducts(index)));
+        body: ProductListPage(includesSearching: true,
+            loadProducts: (index, [name]) async =>
+                Server.getProducts(index, name)));
   }
 }

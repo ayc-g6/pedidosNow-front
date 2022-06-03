@@ -11,7 +11,8 @@ class BusinessProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProductListPage(
-        loadProducts: (index) async => Server.getBussinessProducts(
+        includesSearching: false,
+        loadProducts: (index, [name]) async => Server.getBussinessProducts(
             index, Provider.of<Auth>(context, listen: false).accessToken));
   }
 }
