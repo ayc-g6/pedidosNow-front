@@ -1,13 +1,19 @@
+import 'package:envios_ya/src/models/auth.dart';
+import 'package:envios_ya/src/services/server.dart';
+import 'package:envios_ya/src/widgets/page_reloader.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 
 class ProductListPage extends StatefulWidget {
   final Future<List<Product>> Function(int index) loadProducts;
+  final PageReloadObserver? pageReloadObserver;
 
-  const ProductListPage({Key? key, required this.loadProducts})
+  const ProductListPage(
+      {Key? key, required this.loadProducts, this.pageReloadObserver})
       : super(key: key);
 
   @override
@@ -24,10 +30,16 @@ class _ProductListPageState extends State<ProductListPage> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+    widget.pageReloadObserver?.addListener(() {
+      _pagingController.refresh();
+    });
     super.initState();
   }
 
   Future<void> _fetchPage(int pageKey) async {
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       final newItems = await widget.loadProducts(pageKey);
 
@@ -41,6 +53,11 @@ class _ProductListPageState extends State<ProductListPage> {
         final nextPageKey = pageKey + 1;
         _pagingController.appendPage(newItems, nextPageKey);
       }
+    } on ServerException catch (error) {
+      if (error.isAuthException()) {
+        auth.delete();
+        navigator.popUntil((route) => route.isFirst);
+      }
     } on Exception catch (error) {
       String errorMessage = error.toString();
       // Show snackbar only if planned error
@@ -50,7 +67,7 @@ class _ProductListPageState extends State<ProductListPage> {
             SnackBar(content: Text(error.toString().substring(11)));
 
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        scaffoldMessenger.showSnackBar(snackBar);
       }
       if (!mounted) return;
       _pagingController.error = error;

@@ -131,7 +131,7 @@ class _NewProductPageState extends State<NewProductPage> {
             protein: _protein!,
             carbs: _carbs!,
             fat: _fat!);
-        if (mounted) Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop(true);
       } on ServerException catch (e) {
         if (!mounted) return;
         final snackBar = SnackBar(content: Text(e.message));

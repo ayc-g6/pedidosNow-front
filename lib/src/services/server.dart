@@ -8,11 +8,14 @@ import '../models/order.dart';
 
 class ServerException implements Exception {
   final String message;
+  final int code;
 
-  const ServerException(this.message);
+  const ServerException(this.message, {this.code = 0});
 
   @override
   String toString() => message;
+
+  bool isAuthException() => code == 401;
 }
 
 class Server {
@@ -129,13 +132,11 @@ class Server {
       body: jsonEncode(body),
     );
 
-    print(response.statusCode);
-
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
       case HttpStatus.unauthorized:
-        String errorMsg = jsonDecode(response.body);
+        String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');
@@ -180,7 +181,7 @@ class Server {
 
         return productsList(response.body);
       case HttpStatus.unauthorized:
-        String errorMsg = jsonDecode(response.body);
+        String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');
@@ -197,6 +198,9 @@ class Server {
       },
     );
 
+    print(response.body);
+    print(response.statusCode);
+
     switch (response.statusCode) {
       case HttpStatus.ok:
         List<Product> productsList(String str) => List<Product>.from(
@@ -204,8 +208,8 @@ class Server {
 
         return productsList(response.body);
       case HttpStatus.unauthorized:
-        String errorMsg = jsonDecode(response.body);
-        throw ServerException(errorMsg);
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg, code: response.statusCode);
       default:
         throw const ServerException('Server Error - Please try again');
     }
@@ -229,7 +233,7 @@ class Server {
       case HttpStatus.ok:
         return;
       case HttpStatus.unauthorized:
-        String errorMsg = jsonDecode(response.body);
+        String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');
@@ -250,7 +254,7 @@ class Server {
       case HttpStatus.ok:
         return jsonDecode(response.body);
       case HttpStatus.unauthorized:
-        String errorMsg = jsonDecode(response.body);
+        String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');

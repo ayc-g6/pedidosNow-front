@@ -1,6 +1,7 @@
 import 'package:envios_ya/src/pages/business_home.dart';
 import 'package:envios_ya/src/pages/business_orders.dart';
 import 'package:envios_ya/src/pages/business_products.dart';
+import 'package:envios_ya/src/widgets/page_reloader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,19 +17,31 @@ class BusinessMainPage extends StatefulWidget {
 
 class _BusinessMainPageState extends State<BusinessMainPage> {
   int _selectedIndex = 0;
+  final PageReloadObserver _reloadObserver = PageReloadObserver();
+  late List<Widget> _tabs;
 
-  static const List<Widget> _tabs = [
-    BusinessHome(),
-    BusinessOrders(),
-    BusinessProducts(),
-  ];
+  @override
+  void initState() {
+    _tabs = [
+      const BusinessHome(),
+      const BusinessOrders(),
+      BusinessProducts(
+        reloadObserver: _reloadObserver,
+      ),
+    ];
+    super.initState();
+  }
 
-  void _addProduct(context) {
-    Navigator.of(context).push(
+  void _addProduct(context) async {
+    final addedProduct = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const NewProductPage(),
       ),
     );
+
+    if (addedProduct != null && addedProduct) {
+      _reloadObserver.notifyListeners();
+    }
   }
 
   void _onItemTapped(int index) {
