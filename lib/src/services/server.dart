@@ -101,15 +101,35 @@ class Server {
     }
   }
 
-  static Future<void> createProduct(Product product, String accessToken) async {
+  static Future<void> createProduct(
+    String accessToken, {
+    required String name,
+    required String description,
+    required double price,
+    required double calories,
+    required double carbs,
+    required double protein,
+    required double fat,
+  }) async {
+    final body = {
+      'name': name,
+      'price': price,
+      'calories': calories,
+      'carbs': carbs,
+      'protein': protein,
+      'fat': fat
+    };
+
     final response = await http.post(
       Uri.https(apiUrl, '/product/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader:  'Bearer $accessToken',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
       },
-      body: json.encode(product),
+      body: jsonEncode(body),
     );
+
+    print(response.statusCode);
 
     switch (response.statusCode) {
       case HttpStatus.ok:

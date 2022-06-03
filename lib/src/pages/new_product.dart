@@ -123,15 +123,14 @@ class _NewProductPageState extends State<NewProductPage> {
     if (_createProductFormKey.currentState!.validate()) {
       _createProductFormKey.currentState!.save();
       try {
-        await Server.createProduct(
-            Product(
-                name: _name!,
-                price: _price!,
-                calories: _calories!,
-                protein: _protein!,
-                carbs: _carbs!,
-                fat: _fat!),
-            auth.accessToken!);
+        await Server.createProduct(auth.accessToken!,
+            name: _name!,
+            description: "",
+            price: _price!,
+            calories: _calories!,
+            protein: _protein!,
+            carbs: _carbs!,
+            fat: _fat!);
         if (mounted) Navigator.of(context).pop();
       } on ServerException catch (e) {
         if (!mounted) return;
