@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
-import '../models/order.dart';
 
 class ServerException implements Exception {
   final String message;

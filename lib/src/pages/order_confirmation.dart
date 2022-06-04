@@ -1,5 +1,4 @@
 import 'package:envios_ya/src/models/product.dart';
-import 'package:envios_ya/src/models/order.dart';
 import 'package:envios_ya/src/pages/successful_purchase.dart';
 import 'package:envios_ya/src/services/server.dart';
 import '../models/auth.dart';
