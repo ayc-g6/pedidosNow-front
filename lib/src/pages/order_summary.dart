@@ -29,15 +29,18 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 Align(
                     alignment: Alignment.topCenter,
                     child: Text("Your purchase",
-                        style: Theme.of(context).textTheme.titleLarge)),
+                        style: Theme.of(context).textTheme.titleLarge
+                      )
+                    ),
                 Row(children: [
                   const Icon(Icons.fastfood_outlined),
                   Expanded(
-                      child: ListTile(
+                    child: ListTile(
                     title: Text(widget.product.name,
                         style: Theme.of(context).textTheme.titleLarge),
-                    //subtitle: Text("${widget.product.owner}\n\$${widget.product.price}") TODO check this
-                  )),
+                    subtitle: Text("\$${widget.product.price}") // TODO: Try to put the owner's name here too
+                    )
+                  ),
                   IconButton(
                     icon: const Icon(Icons.remove),
                     onPressed: () => setState(() {
@@ -50,7 +53,9 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       width: 48.0,
                       alignment: Alignment.center,
                       child: Text('$_quantity',
-                          style: Theme.of(context).textTheme.bodyMedium)),
+                          style: Theme.of(context).textTheme.bodyMedium
+                        )
+                  ),
                   IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () => setState(() {
@@ -61,13 +66,13 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(height: 16.0),
                     Chip(
                       backgroundColor: Colors.red,
-                      label: Text(
-                          '\$ ${(_quantity * widget.product.price).toStringAsFixed(2)}'),
+                      label: Text('\$ ${(_quantity * widget.product.price).toStringAsFixed(2)}'),
                       labelStyle: const TextStyle(color: Colors.white),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(height: 16.0),
                     ElevatedButton(
                       child: const Text("Buy"),
                       onPressed: () {
