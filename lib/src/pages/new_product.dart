@@ -104,7 +104,7 @@ class _NewProductPageState extends State<NewProductPage> {
       try {
         await Server.createProduct(auth.accessToken!,
             name: _name!,
-            description: "",
+            description: _description!,
             price: _price!,
             calories: _calories!,
             protein: _protein!,

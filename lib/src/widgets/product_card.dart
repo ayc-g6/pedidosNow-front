@@ -50,8 +50,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16.0),
-              Text(
-                  'A yummy description of this product so that you want it to buy it and devour it'),
+              Text(product.description),
             ],
           ),
         ),

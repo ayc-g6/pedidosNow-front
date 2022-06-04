@@ -131,6 +131,7 @@ class Server {
   }) async {
     final body = {
       'name': name,
+      'description': description,
       'price': price,
       'calories': calories,
       'carbs': carbs,
