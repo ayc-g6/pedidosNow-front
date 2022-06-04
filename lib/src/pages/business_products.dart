@@ -1,3 +1,4 @@
+import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/widgets/products_list.dart';
 import 'package:envios_ya/src/observers/page_reloader.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,16 @@ class BusinessProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProductList(
-      loadProducts: (index) async => Server.getBussinessProducts(
-          index, Provider.of<Auth>(context, listen: false).accessToken),
+      loadProducts: (index) async {
+        String? accessToken =
+            Provider.of<Auth>(context, listen: false).accessToken;
+        // We allow exceptions to propagate to the caller Widget
+        final productsData =
+            await Server.getBussinessProducts(index, accessToken);
+        List<Product> products =
+            List.of(productsData.map((e) => Product.fromJson(e)));
+        return products;
+      },
       pageReloadObserver: reloadObserver,
     );
   }

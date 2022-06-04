@@ -1,4 +1,3 @@
-import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 import '../models/auth.dart';

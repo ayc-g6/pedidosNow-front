@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/auth.dart';
+import 'package:envios_ya/src/models/business.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:envios_ya/src/observers/page_reloader.dart';
 import 'package:envios_ya/src/widgets/product_card.dart';
@@ -24,6 +25,7 @@ class _ProductListState extends State<ProductList> {
   final int _pageSize = 5;
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 0);
+  final Map<String, Business> _businesses = {};
 
   @override
   void initState() {
@@ -41,17 +43,23 @@ class _ProductListState extends State<ProductList> {
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      final newItems = await widget.loadProducts(pageKey);
+      List<Product> newProducts = await widget.loadProducts(pageKey);
+      for (final product in newProducts) {
+        if (!_businesses.containsKey(product.ownerID)) {
+          final businessData = await Server.getBusiness(product.ownerID);
+          _businesses[product.ownerID] = Business.fromJson(businessData);
+        }
+      }
 
       // If not mounted, using page controller throws Error.
       if (!mounted) return;
 
-      final isLastPage = newItems.length < _pageSize;
+      final isLastPage = newProducts.length < _pageSize;
       if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
+        _pagingController.appendLastPage(newProducts);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey);
+        _pagingController.appendPage(newProducts, nextPageKey);
       }
     } on ServerException catch (error) {
       if (error.isAuthException()) {
@@ -85,7 +93,12 @@ class _ProductListState extends State<ProductList> {
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Product>(
           itemBuilder: (context, item, index) => Card(
-            child: ProductCard(product: item),
+            child: Column(
+              children: [
+                ProductCard(product: item),
+                Text('${_businesses[item.ownerID]?.address}')
+              ],
+            ),
           ),
         ),
       ),

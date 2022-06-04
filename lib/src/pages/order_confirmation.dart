@@ -34,7 +34,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     Auth auth = Provider.of<Auth>(context, listen: false);
     Order order = Order(
         productId: widget.product.name, // cambiar a productId
-        businessId: widget.product.owner, //cambiar a businessId
+        businessId: widget.product.ownerID, //cambiar a businessId
         customerId: 'not-set',
         quantity: widget.quantity,
         state: 0,

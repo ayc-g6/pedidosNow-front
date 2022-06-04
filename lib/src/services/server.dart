@@ -104,6 +104,22 @@ class Server {
     }
   }
 
+  static Future<Map<String, dynamic>> getBusiness(String businessID) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/business/$businessID'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
   static Future<void> createProduct(
     String accessToken, {
     required String name,
@@ -162,7 +178,7 @@ class Server {
     }
   }
 
-  static Future<List<Product>> getProducts(int pageKey,
+  static Future<List<dynamic>> getProducts(int pageKey,
       {String? productName}) async {
     final Map<String, dynamic> queryParams = {};
     if (productName != null) queryParams['name'] = productName;
@@ -176,10 +192,7 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
-        List<Product> productsList(String str) => List<Product>.from(
-            json.decode(str).map((x) => Product.fromJson(x)));
-
-        return productsList(response.body);
+        return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
@@ -188,7 +201,7 @@ class Server {
     }
   }
 
-  static Future<List<Product>> getBussinessProducts(
+  static Future<List<dynamic>> getBussinessProducts(
       int pageKey, String? accessToken) async {
     final response = await http.get(
       Uri.https(apiUrl, '/business/product/$pageKey'),
@@ -203,10 +216,7 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
-        List<Product> productsList(String str) => List<Product>.from(
-            json.decode(str).map((x) => Product.fromJson(x)));
-
-        return productsList(response.body);
+        return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg, code: response.statusCode);
