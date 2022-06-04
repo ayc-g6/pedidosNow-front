@@ -213,9 +213,6 @@ class Server {
       },
     );
 
-    print(response.body);
-    print(response.statusCode);
-
     switch (response.statusCode) {
       case HttpStatus.ok:
         return jsonDecode(response.body);

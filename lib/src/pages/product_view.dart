@@ -179,6 +179,8 @@ class MacronutrientsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO Check if totalAmount == 0, if so, show nothing, else
+    // show graphic
     return SfCircularChart(
       series: <CircularSeries>[
         DoughnutSeries<MacronutrientsChartData, String>(
