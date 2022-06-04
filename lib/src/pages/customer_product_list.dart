@@ -13,11 +13,14 @@ class MySearchDelegate extends SearchDelegate {
     'French Fries',
     'Burger',
     'Pizza',
-    'Emapanada',
+    'Empanada',
     'Beer',
     'Water',
     'Juice',
+    'Soda',
     'Ice Cream',
+    'Flan',
+    'Brownie',
   ];
 
   @override
