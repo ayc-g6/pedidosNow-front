@@ -93,13 +93,9 @@ class _ProductListState extends State<ProductList> {
         padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Product>(
-          itemBuilder: (context, item, index) => Card(
-            child: Column(
-              children: [
-                ProductCard(product: item),
-                Text('${_businesses[item.ownerID]?.address}')
-              ],
-            ),
+          itemBuilder: (context, item, index) => ProductCard(
+            product: item,
+            business: _businesses[item.ownerID]!,
           ),
         ),
       ),
