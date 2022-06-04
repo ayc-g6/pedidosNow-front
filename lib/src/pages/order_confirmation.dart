@@ -42,7 +42,10 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
         deliveryAddress: _deliveryAddress!);
     try {
       await Server.createOrder(order, auth.accessToken);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const SuccessfulPurchasePage()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const SuccessfulPurchasePage()));
     } on ServerException catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));
@@ -65,18 +68,16 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                 Align(
                     alignment: Alignment.topCenter,
                     child: Text("Your purchase",
-                        style: Theme.of(context).textTheme.titleLarge
-                        )
-                ),
+                        style: Theme.of(context).textTheme.titleLarge)),
                 Row(children: [
                   const Icon(Icons.fastfood_outlined),
                   Expanded(
                       child: ListTile(
                           title: Text(
-                              "\$" + (widget.product.price * widget.quantity).toStringAsFixed(2),
-                              style: Theme.of(context).textTheme.titleLarge)
-                              )
-                  ),
+                              "\$" +
+                                  (widget.product.price * widget.quantity)
+                                      .toStringAsFixed(2),
+                              style: Theme.of(context).textTheme.titleLarge))),
                 ]),
                 const SizedBox(height: 16.0),
                 Form(
