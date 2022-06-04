@@ -12,9 +12,13 @@ import '../models/product.dart';
 class ProductList extends StatefulWidget {
   final Future<List<Product>> Function(int index) loadProducts;
   final PageReloadObserver? pageReloadObserver;
+  final bool includesSearching;
 
   const ProductList(
-      {Key? key, required this.loadProducts, this.pageReloadObserver})
+      {Key? key,
+      required this.loadProducts,
+      required this.includesSearching,
+      this.pageReloadObserver})
       : super(key: key);
 
   @override
@@ -22,6 +26,7 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
+  final nameSearched = "";
   final int _pageSize = 5;
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 0);
@@ -104,6 +109,41 @@ class _ProductListState extends State<ProductList> {
       ),
     );
   }
+  /*    
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
+      child: Column(
+        children: [
+          SearchBar(
+            search: widget.includesSearching,
+            onSubmitted: (value) {
+              setState(() {
+                _nameSearched = value;
+              });
+              if (!mounted) return;
+              _pagingController.refresh();
+            },
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => Future.sync(
+                () => _pagingController.refresh(),
+              ),
+              child: PagedListView<int, Product>(
+                padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Product>(
+                  itemBuilder: (context, item, index) => Card(
+                    child: ProductCard(product: item),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }*/
 
   @override
   void dispose() {

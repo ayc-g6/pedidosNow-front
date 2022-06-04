@@ -24,6 +24,7 @@ class CustomerProductList extends StatelessWidget {
         ],
       ),
       body: ProductList(
+        includesSearching: true,
         loadProducts: (index) async {
           String? accessToken =
               Provider.of<Auth>(context, listen: false).accessToken;

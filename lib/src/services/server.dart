@@ -179,9 +179,11 @@ class Server {
   }
 
   static Future<List<dynamic>> getProducts(int pageKey,
-      {String? productName}) async {
+      [String? productName]) async {
     final Map<String, dynamic> queryParams = {};
-    if (productName != null) queryParams['name'] = productName;
+    if (productName != null && productName.isNotEmpty) {
+      queryParams['name'] = productName;
+    }
 
     final response = await http.get(
       Uri.https(apiUrl, '/product/all/$pageKey', queryParams),
