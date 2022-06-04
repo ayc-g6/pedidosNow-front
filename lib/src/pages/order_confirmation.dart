@@ -28,6 +28,8 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     return null;
   }
 
+  // TODO Check thing of validation. something was off - Santi
+
   void _createOrder() async {
     FocusScope.of(context).unfocus();
     _orderFormKey.currentState!.save();
