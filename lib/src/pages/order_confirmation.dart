@@ -33,19 +33,18 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     FocusScope.of(context).unfocus();
     _orderFormKey.currentState!.save();
     Auth auth = Provider.of<Auth>(context, listen: false);
-    Order order = Order(
-        productId: widget.product.name, // cambiar a productId
-        businessId: widget.product.ownerID, //cambiar a businessId
-        customerId: 'not-set',
-        quantity: widget.quantity,
-        state: 0,
-        deliveryAddress: _deliveryAddress!);
     try {
-      await Server.createOrder(order, auth.accessToken);
+      await Server.createOrder(auth.accessToken!,
+          productId: widget.product.name,
+          deliveryAddress: _deliveryAddress!,
+          quantity: widget.quantity,
+          businessId: widget.product.ownerID);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const SuccessfulPurchasePage()));
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SuccessfulPurchasePage(),
+        ),
+      );
     } on ServerException catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));

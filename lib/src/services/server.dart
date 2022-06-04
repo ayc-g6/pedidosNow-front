@@ -224,16 +224,25 @@ class Server {
     }
   }
 
-  static Future<void> createOrder(Order order, String? accessToken) async {
-    print(json.encode(order));
-    print(accessToken);
+  static Future<void> createOrder(String accessToken,
+      {required String productId,
+      required String businessId,
+      required String deliveryAddress,
+      required int quantity}) async {
+    final body = {
+      'product_id': productId,
+      'business_id': businessId,
+      'delivery_address': deliveryAddress,
+      'quantity': quantity,
+    };
+
     final response = await http.post(
       Uri.https(apiUrl, '/order/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $accessToken'
       },
-      body: json.encode(order),
+      body: jsonEncode(body),
     );
 
     print(response.statusCode);
