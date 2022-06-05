@@ -258,10 +258,10 @@ class Server {
     }
   }
 
-  static Future<List<dynamic>> getOrders(
+  static Future<List<dynamic>> getBusinessOrders(
       String accessToken, int pageKey) async {
     final response = await http.get(
-      Uri.https(apiUrl, '/order/all/$pageKey'),
+      Uri.https(apiUrl, '/business/order/$pageKey'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $accessToken'

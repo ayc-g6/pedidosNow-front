@@ -1,11 +1,9 @@
 import 'package:envios_ya/src/models/auth.dart';
+import 'package:envios_ya/src/models/order.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
-
-// TODO Dummy
-class Order {}
 
 class BusinessOrders extends StatefulWidget {
   const BusinessOrders({Key? key}) : super(key: key);
@@ -28,14 +26,13 @@ class _BusinessOrdersState extends State<BusinessOrders> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    final navigator = Navigator.of(context);
     try {
-      // Auth auth = Provider.of<Auth>(context, listen: false);
-      //final newItemsData = await Server.getOrders(accessToken, pageKey);
-      final fakeNewItemsData = [1, 2, 3, 4];
-      // TODO Use .fromJSON()
-      List<Order> newItems = List<Order>.from(fakeNewItemsData.map(
-        (e) => Order(),
-      ));
+      final newItemsData =
+          await Server.getBusinessOrders(auth.accessToken!, pageKey);
+      List<Order> newItems =
+          List<Order>.of(newItemsData.map((e) => Order.fromJson(e)));
 
       // If not mounted, using page controller throws Error.
       if (!mounted) return;
@@ -44,8 +41,13 @@ class _BusinessOrdersState extends State<BusinessOrders> {
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
-        final nextPageKey = pageKey + newItems.length;
+        final nextPageKey = pageKey++;
         _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } on ServerException catch (error) {
+      if (error.isAuthException()) {
+        auth.delete();
+        navigator.popUntil((route) => route.isFirst);
       }
     } on Exception catch (error) {
       String errorMessage = error.toString();
