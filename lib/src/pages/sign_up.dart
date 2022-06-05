@@ -33,7 +33,7 @@ class SignUpPage extends StatelessWidget {
                           case Account.customer:
                             return const SignUpCustomerForm();
                           case Account.delivery:
-                            return Container();
+                            return const SignUpDeliveryForm();
                         }
                       },
                     ),
@@ -224,6 +224,186 @@ class _SignUpCustomerFormState extends State<SignUpCustomerForm> {
     super.dispose();
   }
 }
+
+//! Delivery
+
+class SignUpDeliveryForm extends StatefulWidget {
+  const SignUpDeliveryForm({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpDeliveryForm> createState() => _SignUpDeliveryFormState();
+}
+
+class _SignUpDeliveryFormState extends State<SignUpDeliveryForm> {
+  bool _passwordObscured = true;
+  bool _passwordConfirmationObscured = true;
+  bool isLoading = false;
+
+  final _signUpDeliveryFormKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+
+  String? _username;
+  String? _email;
+  String? _password;
+
+  String? _validateUsername(value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a username';
+    }
+    if (!RegExp(r"^[A-Za-z]+$").hasMatch(value.toLowerCase())) {
+      return 'Please use only alphabetical characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 8) {
+      return 'Password must contain 8 or more characters';
+    }
+    return null;
+  }
+
+  String? _validatePasswordConfirmation(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (_passwordController.text != value) {
+      return 'Password confirmation must equal password';
+    }
+    return null;
+  }
+
+  void _signUpDelivery() async {
+    setState(() {
+      isLoading = true;
+    });
+    FocusScope.of(context).unfocus();
+    if (_signUpDeliveryFormKey.currentState!.validate()) {
+      _signUpDeliveryFormKey.currentState!.save();
+      try {
+        final navigator = Navigator.of(context);
+        await Server.signUpDelivery(_username!, _email!, _password!);
+        final accessTokenAndScope = await Server.logIn(_email!, _password!);
+        await Provider.of<Auth>(context, listen: false)
+            .updateFromMap(accessTokenAndScope);
+        navigator.popUntil((route) => route.isFirst);
+      } on ServerException catch (e) {
+        if (!mounted) return;
+        final snackBar = SnackBar(content: Text(e.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _signUpDeliveryFormKey,
+      child: Column(
+        children: [
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            onSaved: (value) => _username = value,
+            validator: (value) => _validateUsername(value),
+            decoration: const InputDecoration(
+              labelText: 'Username',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            onSaved: (value) => _email = value,
+            validator: (value) => _validateEmail(value),
+            decoration: const InputDecoration(
+              hintText: 'example@email.com',
+              labelText: 'Email',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            controller: _passwordController,
+            obscureText: _passwordObscured,
+            onSaved: (value) => _password = value,
+            validator: (value) => _validatePassword(value),
+            decoration: InputDecoration(
+                labelText: 'Password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _passwordObscured = !_passwordObscured;
+                      });
+                    },
+                    icon: Icon(_passwordObscured
+                        ? Icons.visibility_off
+                        : Icons.visibility))),
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            textInputAction: TextInputAction.done,
+            obscureText: _passwordConfirmationObscured,
+            validator: (value) => _validatePasswordConfirmation(value),
+            decoration: InputDecoration(
+                labelText: 'Password Confirmation',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _passwordConfirmationObscured =
+                            !_passwordConfirmationObscured;
+                      });
+                    },
+                    icon: Icon(_passwordConfirmationObscured
+                        ? Icons.visibility_off
+                        : Icons.visibility))),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                child: const Text('I already have an account'),
+              ),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () => _signUpDelivery(),
+                      child: const Text('SIGN UP'),
+                    ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+}
+
 
 class SignUpBusinessForm extends StatefulWidget {
   const SignUpBusinessForm({Key? key}) : super(key: key);
