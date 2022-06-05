@@ -91,7 +91,7 @@ class CustomerProductList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product list'),
+        title: const Text('Product List'),
         actions: [
           IconButton(
             onPressed: () {

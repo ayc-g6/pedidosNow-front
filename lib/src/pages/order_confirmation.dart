@@ -20,6 +20,7 @@ class OrderConfirmationPage extends StatefulWidget {
 class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
   String? _deliveryAddress;
   final _orderFormKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   String? _validateAddress(String? value) {
     if (value == null || value.isEmpty) {
@@ -28,29 +29,42 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     return null;
   }
 
-  // TODO Check thing of validation. something was off - Santi
-
   void _createOrder() async {
+    setState(() {
+      isLoading = true;
+    });
     FocusScope.of(context).unfocus();
-    _orderFormKey.currentState!.save();
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    try {
-      await Server.createOrder(auth.accessToken!,
-          productId: widget.product.id,
-          deliveryAddress: _deliveryAddress!,
-          quantity: widget.quantity,
-          businessId: widget.product.ownerID);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SuccessfulPurchasePage(),
-        ),
-      );
-    } on ServerException catch (e) {
-      if (!mounted) return;
-      final snackBar = SnackBar(content: Text(e.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (_orderFormKey.currentState!.validate()) {
+      _orderFormKey.currentState!.save();
+      Auth auth = Provider.of<Auth>(context, listen: false);
+      final navigator = Navigator.of(context);
+      try {
+        await Server.createOrder(auth.accessToken!,
+            productId: widget.product.id,
+            deliveryAddress: _deliveryAddress!,
+            quantity: widget.quantity,
+            businessId: widget.product.ownerID);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SuccessfulPurchasePage(),
+          ),
+        );
+      } on ServerException catch (error) {
+        if (error.isAuthException()) {
+          auth.delete();
+          navigator.popUntil((route) => route.isFirst);
+          return;
+        }
+        if (!mounted) return;
+        final snackBar = SnackBar(content: Text(error.message));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -95,10 +109,12 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                             ),
                           ),
                           const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            child: const Text("Confirm Purchase"),
-                            onPressed: () async => _createOrder(),
-                          )
+                          isLoading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  child: const Text("Confirm Purchase"),
+                                  onPressed: () async => _createOrder(),
+                                )
                         ])),
               ]),
             ),

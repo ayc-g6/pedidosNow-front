@@ -209,7 +209,7 @@ class _NewProductPageState extends State<NewProductPage> {
               ? const CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: () async => _createProduct(),
-                  child: const Text("Create product"))
+                  child: const Text("CREATE PRODUCT"))
         ],
       ),
     );

@@ -36,7 +36,6 @@ class _BusinessOrdersState extends State<BusinessOrders> {
     try {
       final newItemsData =
           await Server.getBusinessOrders(auth.accessToken!, pageKey);
-      print(newItemsData);
       List<Order> newItems =
           List<Order>.of(newItemsData.map((e) => Order.fromJson(e)));
       for (final order in newItems) {

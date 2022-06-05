@@ -27,25 +27,22 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: double.maxFinite,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        product.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: textTheme.titleLarge,
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      product.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleLarge,
                     ),
-                    Text(
-                      "${product.price.toStringAsFixed(2)} \$",
-                      style: textTheme.headline6!.copyWith(color: Colors.green),
-                    ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    "${product.price.toStringAsFixed(2)} \$",
+                    style: textTheme.headline6!.copyWith(color: Colors.green),
+                  ),
+                ],
               ),
               const Divider(),
               const SizedBox(height: 8.0),

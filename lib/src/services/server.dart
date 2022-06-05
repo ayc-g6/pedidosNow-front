@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-import '../models/product.dart';
-
 // TODO Review returns and throws
 
 class ServerException implements Exception {

@@ -23,52 +23,61 @@ class _ProductViewPageState extends State<ProductViewPage> {
         automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
-        child: Card(
-            child: Column(children: [
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
               Row(
                 children: [
                   Expanded(
                     child: ListTile(
                       minVerticalPadding: 4.0,
-                      title: Text(widget.product.name,
-                          style: Theme.of(context).textTheme.titleLarge),
+                      title: Text(
+                        widget.product.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
 //                      subtitle: Text("De: ${widget.product.owner}"), TODO check this
                     ),
                   ),
                   if (Provider.of<Auth>(context, listen: false).scope ==
                       AuthScope.customer)
                     Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: ElevatedButton(
-                          child: const Text("Order Product"),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    OrderSummaryPage(product: widget.product),
-                              ),
-                            );
-                          },
-                        ))
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: ElevatedButton(
+                        child: const Text("Order Product"),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderSummaryPage(product: widget.product),
+                            ),
+                          );
+                        },
+                      ),
+                    )
                 ],
               ),
               Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        "\$${widget.product.price}",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ))),
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    "\$ ${widget.product.price}",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
               NutritionalInfo(
-                  calories: widget.product.calories,
-                  protein: widget.product.protein,
-                  carbs: widget.product.carbs,
-                  fat: widget.product.fat)
-            ]),
-            elevation: 8.0,
-            margin: const EdgeInsets.all(16.0)),
+                calories: widget.product.calories,
+                protein: widget.product.protein,
+                carbs: widget.product.carbs,
+                fat: widget.product.fat,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -97,7 +106,6 @@ class NutritionalInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 8.0),
         NutritionalFact(
             text: "Calories",
             amount: calories,
@@ -168,19 +176,18 @@ class NutritionalFact extends StatelessWidget {
 
 class MacronutrientsChart extends StatelessWidget {
   final List<MacronutrientsChartData> data;
-  late double _totalAmount;
+  final double _totalAmount;
 
-  MacronutrientsChart({Key? key, required this.data}) : super(key: key) {
-    _totalAmount = 0;
-    for (MacronutrientsChartData element in data) {
-      _totalAmount += element.amount;
-    }
-  }
+  MacronutrientsChart({Key? key, required this.data})
+      : _totalAmount = data.fold(
+            0, (previousValue, element) => previousValue + element.amount),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO Check if totalAmount == 0, if so, show nothing, else
-    // show graphic
+    if (_totalAmount == 0) {
+      return const SizedBox.shrink();
+    }
     return SfCircularChart(
       series: <CircularSeries>[
         DoughnutSeries<MacronutrientsChartData, String>(
