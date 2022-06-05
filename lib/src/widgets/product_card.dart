@@ -12,6 +12,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -26,29 +27,30 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    product.name,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    "${product.price.toStringAsFixed(2)} \$",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6!
-                        .copyWith(color: Colors.green),
-                  ),
-                ],
+              Container(
+                width: double.maxFinite,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.titleLarge,
+                      ),
+                    ),
+                    Text(
+                      "${product.price.toStringAsFixed(2)} \$",
+                      style: textTheme.headline6!.copyWith(color: Colors.green),
+                    ),
+                  ],
+                ),
               ),
+              const Divider(),
               const SizedBox(height: 8.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("${business.name} - ${business.address}"),
-                ],
-              ),
+              Text("${business.name} - ${business.address}",
+                  style: textTheme.titleSmall),
               const SizedBox(height: 16.0),
               Text(product.description),
             ],

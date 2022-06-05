@@ -1,3 +1,5 @@
+enum OrderState { unconfirmed, assigned, preparing, delivering, done }
+
 class Order {
   Order({
     required this.id,
@@ -15,7 +17,7 @@ class Order {
   String customerId;
   String deliveryAddress;
   int quantity;
-  int state;
+  OrderState state;
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -25,7 +27,22 @@ class Order {
       customerId: json['customer_id'],
       deliveryAddress: json['delivery_address'],
       quantity: json['quantity'],
-      state: json['state'],
+      state: OrderState.values[json['state']],
     );
+  }
+
+  String get stateName {
+    switch (state) {
+      case OrderState.unconfirmed:
+        return 'Awaiting Confirmation';
+      case OrderState.assigned:
+        return 'Confirmed';
+      case OrderState.preparing:
+        return 'Being Prepared';
+      case OrderState.delivering:
+        return 'On Its Way';
+      case OrderState.done:
+        return 'Delivered';
+    }
   }
 }
