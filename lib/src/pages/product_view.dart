@@ -20,7 +20,6 @@ class _ProductViewPageState extends State<ProductViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Envios Ya"),
-        automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,7 +35,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
                         widget.product.name,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-//                      subtitle: Text("De: ${widget.product.owner}"), TODO check this
+                      //subtitle: Text("De: ${widget.product.owner}"), TODO check this
                     ),
                   ),
                   if (Provider.of<Auth>(context, listen: false).scope ==

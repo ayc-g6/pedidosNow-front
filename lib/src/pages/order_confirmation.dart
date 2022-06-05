@@ -72,7 +72,6 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Envios Ya"),
-        automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
         child: Card(
