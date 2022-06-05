@@ -143,6 +143,7 @@ class _NewProductPageState extends State<NewProductPage> {
             onSaved: (value) => _description = value,
             validator: (value) => _validateDescription(value),
             textInputAction: TextInputAction.next,
+            maxLines: null,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Description',

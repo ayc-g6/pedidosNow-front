@@ -1,5 +1,6 @@
 import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/models/order.dart';
+import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -16,6 +17,7 @@ class _BusinessOrdersState extends State<BusinessOrders> {
   final int _pageSize = 5;
   final PagingController<int, Order> _pagingController =
       PagingController(firstPageKey: 0);
+  final Map<int, Product> _products = {};
 
   @override
   void initState() {
@@ -31,8 +33,15 @@ class _BusinessOrdersState extends State<BusinessOrders> {
     try {
       final newItemsData =
           await Server.getBusinessOrders(auth.accessToken!, pageKey);
+      print(newItemsData);
       List<Order> newItems =
           List<Order>.of(newItemsData.map((e) => Order.fromJson(e)));
+      for (final order in newItems) {
+        if (!_products.containsKey(order.productId)) {
+          final productData = await Server.getProduct(order.productId);
+          _products[order.productId] = Product.fromJson(productData);
+        }
+      }
 
       // If not mounted, using page controller throws Error.
       if (!mounted) return;
@@ -75,7 +84,8 @@ class _BusinessOrdersState extends State<BusinessOrders> {
         padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Order>(
-            itemBuilder: (context, item, index) => Text('order $index')),
+            itemBuilder: (context, item, index) =>
+                OrderCard(order: item, product: _products[item.productId]!)),
       ),
     );
   }
@@ -84,5 +94,64 @@ class _BusinessOrdersState extends State<BusinessOrders> {
   void dispose() {
     _pagingController.dispose();
     super.dispose();
+  }
+}
+
+class OrderCard extends StatelessWidget {
+  final Order order;
+  final Product product;
+
+  const OrderCard({Key? key, required this.order, required this.product})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Order #${order.id}',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                Text('Awaiting Confirmation',
+                    style: Theme.of(context).textTheme.labelLarge),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            const Divider(),
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('- ${order.quantity} x ${product.name}'),
+                Text('\$${product.price}')
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            const Divider(),
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Total:', style: Theme.of(context).textTheme.labelLarge),
+                Text(
+                  '\$${order.quantity * product.price}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(color: Colors.green),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

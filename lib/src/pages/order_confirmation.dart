@@ -36,7 +36,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
     Auth auth = Provider.of<Auth>(context, listen: false);
     try {
       await Server.createOrder(auth.accessToken!,
-          productId: widget.product.name,
+          productId: widget.product.id,
           deliveryAddress: _deliveryAddress!,
           quantity: widget.quantity,
           businessId: widget.product.ownerID);

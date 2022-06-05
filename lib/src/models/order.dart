@@ -9,8 +9,8 @@ class Order {
     required this.deliveryAddress,
   });
 
-  String id;
-  String productId;
+  int id;
+  int productId;
   String businessId;
   String customerId;
   String deliveryAddress;

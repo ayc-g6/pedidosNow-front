@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
 
+// TODO Review returns and throws
+
 class ServerException implements Exception {
   final String message;
   final int code;
@@ -159,9 +161,13 @@ class Server {
     }
   }
 
-  static Future<Product> getProduct(int productId) async {
+  static Future<Map<String, dynamic>> getProduct(int productId) async {
+    final Map<String, dynamic> queryParams = {
+      'id': "$productId",
+    };
+
     final response = await http.get(
-      Uri.https(apiUrl, '/product/$productId'),
+      Uri.https(apiUrl, '/product/all/0', queryParams),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
       },
@@ -169,7 +175,7 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
-        return Product.fromJson(jsonDecode(response.body));
+        return jsonDecode(response.body)[0];
       case HttpStatus.notFound:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
@@ -197,7 +203,7 @@ class Server {
         return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
-        throw ServerException(errorMsg);
+        throw ServerException(errorMsg, code: response.statusCode);
       default:
         throw const ServerException('Server Error - Please try again');
     }
@@ -225,7 +231,7 @@ class Server {
   }
 
   static Future<void> createOrder(String accessToken,
-      {required String productId,
+      {required int productId,
       required String businessId,
       required String deliveryAddress,
       required int quantity}) async {
@@ -245,8 +251,6 @@ class Server {
       body: jsonEncode(body),
     );
 
-    print(response.statusCode);
-    print(jsonDecode(response.body));
     switch (response.statusCode) {
       case HttpStatus.ok:
         return;
@@ -273,7 +277,7 @@ class Server {
         return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
-        throw ServerException(errorMsg);
+        throw ServerException(errorMsg, code: response.statusCode);
       default:
         throw const ServerException('Server Error - Please try again');
     }
