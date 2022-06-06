@@ -1,7 +1,8 @@
 import 'package:envios_ya/src/pages/business_home.dart';
-import 'package:envios_ya/src/pages/business_orders.dart';
+import 'package:envios_ya/src/widgets/orders_list.dart';
 import 'package:envios_ya/src/pages/business_products.dart';
 import 'package:envios_ya/src/observers/page_reloader.dart';
+import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +25,8 @@ class _BusinessMainPageState extends State<BusinessMainPage> {
   void initState() {
     _tabs = [
       const BusinessHome(),
-      const BusinessOrders(),
-      BusinessProducts(
-        reloadObserver: _reloadObserver,
-      ),
+      const OrdersList(onLoad: Server.getBusinessOrders),
+      BusinessProducts(reloadObserver: _reloadObserver),
     ];
     super.initState();
   }

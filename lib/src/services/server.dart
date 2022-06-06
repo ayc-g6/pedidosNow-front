@@ -304,4 +304,30 @@ class Server {
         throw const ServerException('Server Error - Please try again');
     }
   }
+
+  static Future<List<dynamic>> getDeliveryOrders(
+      String accessToken, int pageKey) async {
+    final Map<String, dynamic> queryParams = {
+      'states': ["0"],
+    };
+
+    final response = await http.get(
+      Uri.https(apiUrl, '/order/all/$pageKey', queryParams),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        print(response.body);
+        return jsonDecode(response.body);
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg, code: response.statusCode);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
 }

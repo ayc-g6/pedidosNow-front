@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/pages/business_main.dart';
+import 'package:envios_ya/src/pages/delivery_main.dart';
 import 'package:envios_ya/src/pages/log_in.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +38,7 @@ class EnviosYaApp extends StatelessWidget {
                   case AuthScope.business:
                     return const BusinessMainPage();
                   case AuthScope.delivery:
-                    return const Scaffold(
-                        body: SafeArea(child: Text('Home del Delivery')));
+                    return const DeliveryMainPage();
                 }
               case AuthState.loggedOut:
                 return const LogInPage();

@@ -8,14 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-class BusinessOrders extends StatefulWidget {
-  const BusinessOrders({Key? key}) : super(key: key);
+class OrdersList extends StatefulWidget {
+  final Future<List<dynamic>> Function(String accessToken, int pageKey) onLoad;
+
+  const OrdersList({Key? key, required this.onLoad}) : super(key: key);
 
   @override
-  State<BusinessOrders> createState() => _BusinessOrdersState();
+  State<OrdersList> createState() => _OrdersListState();
 }
 
-class _BusinessOrdersState extends State<BusinessOrders> {
+class _OrdersListState extends State<OrdersList> {
   final int _pageSize = 5;
   final PagingController<int, Order> _pagingController =
       PagingController(firstPageKey: 0);
@@ -34,8 +36,7 @@ class _BusinessOrdersState extends State<BusinessOrders> {
     Auth auth = Provider.of<Auth>(context, listen: false);
     final navigator = Navigator.of(context);
     try {
-      final newItemsData =
-          await Server.getBusinessOrders(auth.accessToken!, pageKey);
+      final newItemsData = await widget.onLoad(auth.accessToken!, pageKey);
       List<Order> newItems =
           List<Order>.of(newItemsData.map((e) => Order.fromJson(e)));
       for (final order in newItems) {
