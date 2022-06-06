@@ -2,6 +2,7 @@ import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/models/business.dart';
 import 'package:envios_ya/src/models/order.dart';
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/services/server.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -146,6 +147,23 @@ class OrderViewPage extends StatelessWidget {
     ];
   }
 
+  Future<void> updateOrder(BuildContext context, int newOrderState) async {
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      await Server.updateOrderState(auth.accessToken!, order.id, newOrderState);
+    } on ServerException catch (error) {
+      if (error.isAuthException()) {
+        auth.delete();
+        navigator.popUntil((route) => route.isFirst);
+      } else {
+        final snackBar = SnackBar(content: Text(error.message));
+        scaffoldMessenger.showSnackBar(snackBar);
+      }
+    }
+  }
+
   Widget _buildStateChangeButton(BuildContext context) {
     Auth auth = Provider.of<Auth>(context, listen: false);
     AuthScope scope = auth.scope;
@@ -156,7 +174,7 @@ class OrderViewPage extends StatelessWidget {
       return Align(
         alignment: Alignment.centerRight,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => updateOrder(context, 1),
           child: const Text('ACCEPT'),
         ),
       );
@@ -165,7 +183,7 @@ class OrderViewPage extends StatelessWidget {
       return Align(
         alignment: Alignment.centerRight,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => updateOrder(context, 2),
           child: const Text('START PREPARING'),
         ),
       );
@@ -174,7 +192,7 @@ class OrderViewPage extends StatelessWidget {
       return Align(
         alignment: Alignment.centerRight,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => updateOrder(context, 3),
           child: const Text('START DELIVERY'),
         ),
       );
@@ -183,7 +201,7 @@ class OrderViewPage extends StatelessWidget {
       return Align(
         alignment: Alignment.centerRight,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () => updateOrder(context, 4),
           child: const Text('CONFIRM RECEPTION'),
         ),
       );

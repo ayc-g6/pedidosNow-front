@@ -43,7 +43,7 @@ class OrderCard extends StatelessWidget {
                     'Order #${order.id}',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  Text('Awaiting Confirmation',
+                  Text(order.stateName,
                       style: Theme.of(context).textTheme.labelLarge),
                 ],
               ),

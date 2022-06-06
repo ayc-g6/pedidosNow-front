@@ -321,11 +321,38 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
-        print(response.body);
         return jsonDecode(response.body);
       case HttpStatus.unauthorized:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg, code: response.statusCode);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<void> updateOrderState(
+      String accessToken, int orderId, int orderState) async {
+    final Map<String, dynamic> queryParams = {
+      'state': '$orderState',
+    };
+
+    final response = await http.patch(
+      Uri.https(apiUrl, '/order/$orderId', queryParams),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return;
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg, code: response.statusCode);
+      case HttpStatus.conflict:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
       default:
         throw const ServerException('Server Error - Please try again');
     }
