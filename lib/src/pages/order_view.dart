@@ -1,7 +1,9 @@
+import 'package:envios_ya/src/models/auth.dart';
 import 'package:envios_ya/src/models/business.dart';
 import 'package:envios_ya/src/models/order.dart';
 import 'package:envios_ya/src/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OrderViewPage extends StatelessWidget {
   final Product product;
@@ -144,6 +146,52 @@ class OrderViewPage extends StatelessWidget {
     ];
   }
 
+  Widget _buildStateChangeButton(BuildContext context) {
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    AuthScope scope = auth.scope;
+    if (scope == AuthScope.customer) {
+      return const SizedBox.shrink();
+    }
+    if (order.state == OrderState.unconfirmed && scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('ACCEPT'),
+        ),
+      );
+    } else if (order.state == OrderState.assigned &&
+        scope == AuthScope.business) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('START PREPARING'),
+        ),
+      );
+    } else if (order.state == OrderState.preparing &&
+        scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('START DELIVERY'),
+        ),
+      );
+    } else if (order.state == OrderState.delivering &&
+        scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('CONFIRM RECEPTION'),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,6 +212,10 @@ class OrderViewPage extends StatelessWidget {
             const Divider(),
             const SizedBox(height: 8.0),
             ..._buildTicket(context),
+            const SizedBox(height: 8.0),
+            const Divider(),
+            const SizedBox(height: 8.0),
+            _buildStateChangeButton(context)
           ],
         ),
       ),
