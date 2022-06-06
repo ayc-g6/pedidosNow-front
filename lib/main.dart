@@ -36,6 +36,9 @@ class EnviosYaApp extends StatelessWidget {
                     return const CustomerProductList();
                   case AuthScope.business:
                     return const BusinessMainPage();
+                  case AuthScope.delivery:
+                    return const Scaffold(
+                        body: SafeArea(child: Text('Home del Delivery')));
                 }
               case AuthState.loggedOut:
                 return const LogInPage();

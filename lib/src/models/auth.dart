@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 enum AuthState { uninitialized, loggedOut, loggedIn }
-enum AuthScope { business, customer }
+
+enum AuthScope { business, customer, delivery }
 
 extension AuthScopeParsing on String? {
   AuthScope parseAuthScope() {
@@ -11,6 +12,9 @@ extension AuthScopeParsing on String? {
     }
     if (this == 'customer') {
       return AuthScope.customer;
+    }
+    if (this == 'delivery') {
+      return AuthScope.delivery;
     }
     throw FormatException('cannot parse String $this to AuthScope');
   }
@@ -23,6 +27,8 @@ extension StringParsing on AuthScope {
         return 'business';
       case AuthScope.customer:
         return 'customer';
+      case AuthScope.delivery:
+        return 'delivery';
     }
   }
 }

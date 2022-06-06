@@ -45,8 +45,8 @@ class Server {
     }
   }
 
-    static Future<void> signUpDelivery(
-    String username, String email, String password) async {
+  static Future<void> signUpDelivery(
+      String username, String email, String password) async {
     final body = {'username': username, 'email': email, 'password': password};
 
     final response = await http.post(
@@ -67,7 +67,6 @@ class Server {
         throw const ServerException('Server Error - Please try again');
     }
   }
-
 
   static Future<void> signUpBusiness(String businessName, String address,
       String email, String password) async {
@@ -102,7 +101,7 @@ class Server {
     final body = {
       'username': email,
       'password': password,
-      'scope': 'business customer'
+      'scope': 'business customer delivery'
     };
 
     final response = await http.post(
@@ -116,6 +115,7 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
+        print(response.body);
         Map<String, String> accessTokenAndScope =
             Map.castFrom(json.decode(response.body));
         return accessTokenAndScope;
