@@ -122,7 +122,7 @@ class OrderViewPage extends StatelessWidget {
         children: [
           Text('${order.quantity} x ${product.price}',
               style: Theme.of(context).textTheme.labelSmall),
-          Text('\$ ${product.price}')
+          Text('\$ ${order.quantity * product.price}')
         ],
       ),
       const SizedBox(height: 8.0),
