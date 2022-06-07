@@ -126,6 +126,26 @@ class Server {
     }
   }
 
+  static Future<Map<String, dynamic>> getMyBusiness(String accessToken) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/business'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
   static Future<Map<String, dynamic>> getBusiness(String businessID) async {
     final response = await http.get(
       Uri.https(apiUrl, '/business/$businessID'),
