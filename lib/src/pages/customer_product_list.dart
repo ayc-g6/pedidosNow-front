@@ -1,5 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
-import 'package:envios_ya/src/widgets/orders_list.dart';
+import 'package:envios_ya/src/pages/customer_orders.dart';
 import 'package:envios_ya/src/widgets/products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -137,7 +137,7 @@ class CustomerProductList extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CustomerOrders(),
+                          builder: (context) => const CustomerOrdersPage(),
                         ),
                       );
                     },
@@ -169,16 +169,5 @@ class CustomerProductList extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class CustomerOrders extends StatelessWidget {
-  const CustomerOrders({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('My Orders')),
-        body: const OrdersList(onLoad: Server.getCustomerOrders));
   }
 }
