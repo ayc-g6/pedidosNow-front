@@ -111,7 +111,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                           isLoading
                               ? const CircularProgressIndicator()
                               : ElevatedButton(
-                                  child: const Text("Confirm Purchase"),
+                                  child: const Text("CONFIRM PURCHASE"),
                                   onPressed: () async => _createOrder(),
                                 )
                         ])),

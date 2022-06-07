@@ -86,7 +86,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     ),
                     const SizedBox(height: 16.0),
                     ElevatedButton(
-                      child: const Text("Buy"),
+                      child: const Text("BUY"),
                       onPressed: () {
                         Navigator.push(
                           context,

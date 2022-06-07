@@ -22,7 +22,7 @@ class SuccessfulPurchasePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },
-                child: const Text("Return to main menu"))
+                child: const Text("RETURN TO MAIN MENU"))
           ],
         )));
   }

@@ -94,6 +94,14 @@ class _WorkBusyState extends State<WorkBusy> {
     return data;
   }
 
+  Future<void> _refresh() async {
+    Map<String, dynamic> newWork = await getWork(widget.orderId);
+    if (!mounted) return;
+    setState(() {
+      _work = Future.value(newWork);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -151,18 +159,14 @@ class _WorkBusyState extends State<WorkBusy> {
                 ],
               ),
               body: RefreshIndicator(
-                onRefresh: () async {
-                  Map<String, dynamic> newWork = await getWork(widget.orderId);
-                  setState(() {
-                    _work = Future.value(newWork);
-                  });
-                },
+                onRefresh: () => _refresh(),
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: OrderView(
                     product: data['product']!,
                     order: data['order']!,
                     business: data['business']!,
+                    onUpdate: _refresh,
                   ),
                 ),
               ),

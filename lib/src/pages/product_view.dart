@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/auth.dart';
+import 'package:envios_ya/src/models/business.dart';
 import 'package:envios_ya/src/models/product.dart';
 import 'package:envios_ya/src/pages/order_summary.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,11 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ProductViewPage extends StatefulWidget {
   final Product product;
+  final Business business;
 
-  const ProductViewPage({Key? key, required this.product}) : super(key: key);
+  const ProductViewPage(
+      {Key? key, required this.product, required this.business})
+      : super(key: key);
 
   @override
   _ProductViewPageState createState() => _ProductViewPageState();
@@ -30,42 +34,29 @@ class _ProductViewPageState extends State<ProductViewPage> {
                 children: [
                   Expanded(
                     child: ListTile(
-                      minVerticalPadding: 4.0,
                       title: Text(
                         widget.product.name,
                         style: Theme.of(context).textTheme.titleLarge,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      //subtitle: Text("De: ${widget.product.owner}"), TODO check this
+                      subtitle: Text("De: ${widget.business.name}"),
                     ),
                   ),
-                  if (Provider.of<Auth>(context, listen: false).scope ==
-                      AuthScope.customer)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: ElevatedButton(
-                        child: const Text("Order Product"),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderSummaryPage(product: widget.product),
-                            ),
-                          );
-                        },
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Text(
+                        "\$ ${widget.product.price}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(color: Colors.green),
                       ),
-                    )
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Text(
-                    "\$ ${widget.product.price}",
-                    style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
-                ),
+                ],
               ),
               const SizedBox(height: 8.0),
               NutritionalInfo(
@@ -73,7 +64,22 @@ class _ProductViewPageState extends State<ProductViewPage> {
                 protein: widget.product.protein,
                 carbs: widget.product.carbs,
                 fat: widget.product.fat,
-              )
+              ),
+              const SizedBox(height: 16.0),
+              if (Provider.of<Auth>(context, listen: false).scope ==
+                  AuthScope.customer)
+                ElevatedButton(
+                  child: const Text("ORDER PRODUCT"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OrderSummaryPage(product: widget.product),
+                      ),
+                    );
+                  },
+                )
             ],
           ),
         ),
