@@ -44,8 +44,11 @@ class EnviosYaApp extends StatelessWidget {
                 return Scaffold(
                   body: Container(
                     color: Colors.red,
-                    child: const Image(
-                      image: AssetImage('images/enviosya_icon_transparent.png'),
+                    child: const Center(
+                      child: Image(
+                        image:
+                            AssetImage('images/enviosya_icon_transparent.png'),
+                      ),
                     ),
                   ),
                 );
