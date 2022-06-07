@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:envios_ya/src/models/auth.dart';
 
-import 'src/pages/customer_product_list.dart';
+import 'src/pages/customer_home.dart';
 
 void main() {
   runApp(const EnviosYaApp());
@@ -52,7 +52,7 @@ class EnviosYaApp extends StatelessWidget {
               case AuthState.loggedIn:
                 switch (auth.scope) {
                   case AuthScope.customer:
-                    return const CustomerProductList();
+                    return const CustomerHomePage();
                   case AuthScope.business:
                     return const BusinessMainPage();
                   case AuthScope.delivery:

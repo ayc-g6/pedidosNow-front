@@ -85,8 +85,8 @@ class MySearchDelegate extends SearchDelegate {
   }
 }
 
-class CustomerProductList extends StatelessWidget {
-  const CustomerProductList({Key? key}) : super(key: key);
+class CustomerHomePage extends StatelessWidget {
+  const CustomerHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
