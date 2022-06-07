@@ -54,10 +54,11 @@ class _OrdersListState extends State<OrdersList> {
       if (!mounted) return;
 
       final isLastPage = newItems.length < _pageSize;
+
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
-        final nextPageKey = pageKey++;
+        final nextPageKey = ++pageKey;
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } on ServerException catch (error) {

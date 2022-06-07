@@ -24,7 +24,6 @@ class Order {
   DateTime timeUpdated;
 
   factory Order.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Order(
       id: json['id'],
       productId: json['product_id'],

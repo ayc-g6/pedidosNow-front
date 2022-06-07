@@ -1,4 +1,5 @@
 import 'package:envios_ya/src/models/product.dart';
+import 'package:envios_ya/src/widgets/orders_list.dart';
 import 'package:envios_ya/src/widgets/products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,7 +92,7 @@ class CustomerProductList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product List'),
+        title: const Text('Envios Ya'),
         actions: [
           IconButton(
             onPressed: () {
@@ -101,12 +102,6 @@ class CustomerProductList extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.search_rounded),
-          ),
-          IconButton(
-            onPressed: () {
-              Provider.of<Auth>(context, listen: false).delete();
-            },
-            icon: const Icon(Icons.logout_rounded),
           ),
         ],
       ),
@@ -121,6 +116,69 @@ class CustomerProductList extends StatelessWidget {
           return products;
         },
       ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: [
+                  const DrawerHeader(
+                    child: Image(
+                      image: AssetImage('images/enviosya_logo.png'),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.list_rounded),
+                    title: const Text('My Orders'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CustomerOrders(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings_rounded),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            ListTile(
+              onTap: () {
+                Provider.of<Auth>(context, listen: false).delete();
+              },
+              leading: Icon(Icons.logout_rounded, color: Colors.red[700]),
+              title: Text(
+                'Log Out',
+                style: TextStyle(
+                  color: Colors.red[700],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+}
+
+class CustomerOrders extends StatelessWidget {
+  const CustomerOrders({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('My Orders')),
+        body: const OrdersList(onLoad: Server.getCustomerOrders));
   }
 }

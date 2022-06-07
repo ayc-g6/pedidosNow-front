@@ -6,10 +6,8 @@ class SuccessfulPurchasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // TODO: Discuss if the appBar's back button should also take to the main menu
         appBar: AppBar(
           title: const Text("Envios Ya"),
-          automaticallyImplyLeading: true,
         ),
         body: Center(
             child: Column(

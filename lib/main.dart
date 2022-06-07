@@ -41,8 +41,14 @@ class EnviosYaApp extends StatelessWidget {
           builder: (context, auth, child) {
             switch (auth.state) {
               case AuthState.uninitialized:
-                return const Scaffold(
-                    body: Center(child: Text('SPLASH SCREEN')));
+                return Scaffold(
+                  body: Container(
+                    color: Colors.red,
+                    child: const Image(
+                      image: AssetImage('images/enviosya_icon_transparent.png'),
+                    ),
+                  ),
+                );
               case AuthState.loggedIn:
                 switch (auth.scope) {
                   case AuthScope.customer:
