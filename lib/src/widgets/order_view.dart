@@ -55,7 +55,23 @@ class OrderView extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle2),
           Text(order.deliveryAddress),
         ],
-      )
+      ),
+      const SizedBox(height: 8.0),
+      Row(
+        children: [
+          Text('Time Created: ', style: Theme.of(context).textTheme.subtitle2),
+          Text(
+              "${order.timeCreated.hour.toString().padLeft(2, '0')}:${order.timeCreated.minute.toString().padLeft(2, '0')}"),
+        ],
+      ),
+      const SizedBox(height: 8.0),
+      Row(
+        children: [
+          Text('Last Updated: ', style: Theme.of(context).textTheme.subtitle2),
+          Text(
+              "${order.timeUpdated.hour.toString().padLeft(2, '0')}:${order.timeUpdated.minute.toString().padLeft(2, '0')}"),
+        ],
+      ),
     ];
   }
 
@@ -150,75 +166,6 @@ class OrderView extends StatelessWidget {
     ];
   }
 
-  Future<void> updateOrder(BuildContext context, int newOrderState) async {
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    final navigator = Navigator.of(context);
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      await Server.updateOrderState(auth.accessToken!, order.id, newOrderState);
-      if (auth.scope == AuthScope.delivery) {
-        Work work = Provider.of<Work>(context, listen: false);
-        work.update(auth);
-      }
-      onUpdate?.call();
-      navigator.popUntil((route) => route.isFirst);
-    } on ServerException catch (error) {
-      if (error.isAuthException()) {
-        auth.delete();
-        navigator.popUntil((route) => route.isFirst);
-      } else {
-        final snackBar = SnackBar(content: Text(error.message));
-        scaffoldMessenger.showSnackBar(snackBar);
-      }
-    }
-  }
-
-  Widget _buildStateChangeButton(BuildContext context) {
-    Auth auth = Provider.of<Auth>(context, listen: false);
-    AuthScope scope = auth.scope;
-    if (scope == AuthScope.customer) {
-      return const SizedBox.shrink();
-    }
-    if (order.state == OrderState.unconfirmed && scope == AuthScope.delivery) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(
-          onPressed: () => updateOrder(context, 1),
-          child: const Text('ACCEPT'),
-        ),
-      );
-    } else if (order.state == OrderState.assigned &&
-        scope == AuthScope.business) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(
-          onPressed: () => updateOrder(context, 2),
-          child: const Text('START PREPARING'),
-        ),
-      );
-    } else if (order.state == OrderState.preparing &&
-        scope == AuthScope.delivery) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(
-          onPressed: () => updateOrder(context, 3),
-          child: const Text('START DELIVERY'),
-        ),
-      );
-    } else if (order.state == OrderState.delivering &&
-        scope == AuthScope.delivery) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(
-          onPressed: () => updateOrder(context, 4),
-          child: const Text('CONFIRM RECEPTION'),
-        ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -238,9 +185,110 @@ class OrderView extends StatelessWidget {
           const SizedBox(height: 8.0),
           const Divider(),
           const SizedBox(height: 8.0),
-          _buildStateChangeButton(context)
+          OrderStateChangeButton(order: order, onUpdate: onUpdate),
         ],
       ),
     );
+  }
+}
+
+class OrderStateChangeButton extends StatefulWidget {
+  final void Function()? onUpdate;
+  final Order order;
+
+  const OrderStateChangeButton({Key? key, required this.order, this.onUpdate})
+      : super(key: key);
+
+  @override
+  State<OrderStateChangeButton> createState() => _OrderStateChangeButtonState();
+}
+
+class _OrderStateChangeButtonState extends State<OrderStateChangeButton> {
+  bool _isLoading = false;
+
+  Future<void> updateOrder(BuildContext context, int newOrderState) async {
+    setState(() {
+      _isLoading = true;
+    });
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      await Server.updateOrderState(
+          auth.accessToken!, widget.order.id, newOrderState);
+      if (auth.scope == AuthScope.delivery) {
+        Work work = Provider.of<Work>(context, listen: false);
+        work.update(auth);
+      }
+      widget.onUpdate?.call();
+      navigator.popUntil((route) => route.isFirst);
+    } on ServerException catch (error) {
+      if (error.isAuthException()) {
+        auth.delete();
+        navigator.popUntil((route) => route.isFirst);
+      } else {
+        if (!mounted) return;
+        final snackBar = SnackBar(content: Text(error.message));
+        scaffoldMessenger.showSnackBar(snackBar);
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Align(
+        alignment: Alignment.centerRight,
+        child: CircularProgressIndicator(),
+      );
+    }
+    Auth auth = Provider.of<Auth>(context, listen: false);
+    AuthScope scope = auth.scope;
+    if (scope == AuthScope.customer) {
+      return const SizedBox.shrink();
+    }
+    if (widget.order.state == OrderState.unconfirmed &&
+        scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () => updateOrder(context, 1),
+          child: const Text('ACCEPT'),
+        ),
+      );
+    } else if (widget.order.state == OrderState.assigned &&
+        scope == AuthScope.business) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () => updateOrder(context, 2),
+          child: const Text('START PREPARING'),
+        ),
+      );
+    } else if (widget.order.state == OrderState.preparing &&
+        scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () => updateOrder(context, 3),
+          child: const Text('START DELIVERY'),
+        ),
+      );
+    } else if (widget.order.state == OrderState.delivering &&
+        scope == AuthScope.delivery) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () => updateOrder(context, 4),
+          child: const Text('CONFIRM RECEPTION'),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }

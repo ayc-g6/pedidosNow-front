@@ -9,6 +9,8 @@ class Order {
     required this.quantity,
     required this.state,
     required this.deliveryAddress,
+    required this.timeCreated,
+    required this.timeUpdated,
   });
 
   int id;
@@ -18,8 +20,11 @@ class Order {
   String deliveryAddress;
   int quantity;
   OrderState state;
+  DateTime timeCreated;
+  DateTime timeUpdated;
 
   factory Order.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Order(
       id: json['id'],
       productId: json['product_id'],
@@ -28,6 +33,9 @@ class Order {
       deliveryAddress: json['delivery_address'],
       quantity: json['quantity'],
       state: OrderState.values[json['state']],
+      timeCreated: DateTime.parse(json['time_created']).toLocal(),
+      timeUpdated: DateTime.parse(json['time_updated'] ?? json['time_created'])
+          .toLocal(),
     );
   }
 
