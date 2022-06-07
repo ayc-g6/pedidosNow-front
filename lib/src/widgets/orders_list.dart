@@ -95,6 +95,7 @@ class _OrdersListState extends State<OrdersList> {
             order: item,
             product: _products[item.productId]!,
             business: _businesses[item.businessId]!,
+            onUpdate: () => _pagingController.refresh(),
           ),
         ),
       ),

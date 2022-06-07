@@ -115,7 +115,6 @@ class Server {
 
     switch (response.statusCode) {
       case HttpStatus.ok:
-        print(response.body);
         Map<String, String> accessTokenAndScope =
             Map.castFrom(json.decode(response.body));
         return accessTokenAndScope;
@@ -351,6 +350,48 @@ class Server {
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg, code: response.statusCode);
       case HttpStatus.conflict:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<Map<String, dynamic>> getOrder(int orderId) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/order/$orderId'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body);
+      case HttpStatus.notFound:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg);
+      default:
+        throw const ServerException('Server Error - Please try again');
+    }
+  }
+
+  static Future<int> getWork(String accessToken) async {
+    final response = await http.get(
+      Uri.https(apiUrl, '/delivery/order'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken'
+      },
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return jsonDecode(response.body)['order_id'];
+      case HttpStatus.unauthorized:
+        String errorMsg = jsonDecode(response.body)['detail'];
+        throw ServerException(errorMsg, code: response.statusCode);
+      case HttpStatus.notFound:
         String errorMsg = jsonDecode(response.body)['detail'];
         throw ServerException(errorMsg);
       default:

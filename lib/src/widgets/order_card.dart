@@ -8,12 +8,14 @@ class OrderCard extends StatelessWidget {
   final Order order;
   final Product product;
   final Business business;
+  final void Function()? onUpdate;
 
   const OrderCard(
       {Key? key,
       required this.order,
       required this.product,
-      required this.business})
+      required this.business,
+      this.onUpdate})
       : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class OrderCard extends StatelessWidget {
               product: product,
               order: order,
               business: business,
+              onUpdate: onUpdate,
             ),
           ),
         );

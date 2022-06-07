@@ -101,7 +101,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                           TextFormField(
                             onSaved: (value) => _deliveryAddress = value,
                             validator: (value) => _validateAddress(value),
-                            textInputAction: TextInputAction.next,
+                            textInputAction: TextInputAction.done,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Delivery Address',

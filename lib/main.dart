@@ -1,3 +1,4 @@
+import 'package:envios_ya/src/models/work.dart';
 import 'package:envios_ya/src/pages/business_main.dart';
 import 'package:envios_ya/src/pages/delivery_main.dart';
 import 'package:envios_ya/src/pages/log_in.dart';
@@ -18,8 +19,19 @@ class EnviosYaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => Auth(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, Work>(
+          create: (context) => Work(),
+          update: (context, Auth auth, Work? work) {
+            if (work == null) throw ArgumentError.notNull();
+            return work..update(auth);
+          },
+        ),
+      ],
       child: MaterialApp(
         title: 'Envios Ya',
         theme: ThemeData(
